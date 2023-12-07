@@ -47,6 +47,7 @@ app.get('/', (req, res) => {
     res.send('¡Hola, mundo!');
 });
 
+
 app.post('/RegistrarUsuario', (req, res) => {
   // Obtener datos del formulario de registro
   const { nombre, apellido, telefono, correo, contraseña, fechaNacimiento } = req.body;
