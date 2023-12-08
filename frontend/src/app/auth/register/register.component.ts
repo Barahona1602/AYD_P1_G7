@@ -8,27 +8,26 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
   
-  registerForm!: FormGroup;
-  loading: boolean = false;
 
   passwordRegex = /^(?=.*[A-Z])(?=.*[\W])(?=.*[0-9])(?=.*[a-z]).{8,128}$/;
+
+  registerForm: FormGroup = this.fb.group({
+    nombre: [null, [Validators.required]],
+    apellido: [null, [Validators.required]],
+    telefono: [null, [Validators.required]],
+    fechaNacimiento: [null, [Validators.required]],
+    correo: [null, [Validators.required, Validators.email]],
+    password: [null, [Validators.required, Validators.pattern(this.passwordRegex)]],
+    passwordRepeat: [null, [Validators.required]],
+  });
+
+  loading: boolean = false;
+
   
   constructor(private fb: FormBuilder) {}
-  ngOnInit(): void {
-    this.createRegisterForm();
-  }
+  ngOnInit(): void {}
 
-  createRegisterForm(): void {
-    this.loading = true
-    this.registerForm = this.fb.group({
-      nombre: [null, [Validators.required]],
-      apellido: [null, [Validators.required]],
-      telefono: [null, [Validators.required]],
-      fechaNacimiento: [null, [Validators.required]],
-      correo: [null, [Validators.required, Validators.email]],
-      password: [null, [Validators.required, Validators.pattern(this.passwordRegex)]],
-      passwordRepeat: [null, [Validators.required]],
-    });
-    this.loading = false;
+  get notValidNombre(): boolean {
+    return this.registerForm.get("nombre").touched && this.registerForm.get("nombre").invalid;
   }
 }

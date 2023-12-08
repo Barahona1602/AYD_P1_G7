@@ -9,7 +9,7 @@
           <div class="row mt-2">
             <div class="col-lg">
               <label class="form-label">Nombre(s)</label>
-              <input type="text" class="form-control" formControlName="nombre">
+              <input type="text" class="form-control" [ngClass]="{'is-invalid': notValidNombre}" formControlName="nombre">
               <div class="invalid-feedback">
                 Please select a valid state.
               </div>   
