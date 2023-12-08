@@ -8,7 +8,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
   
-  registerForm: FormGroup | undefined;
+  registerForm!: FormGroup;
+  loading: boolean = false;
 
   passwordRegex = /^(?=.*[A-Z])(?=.*[\W])(?=.*[0-9])(?=.*[a-z]).{8,128}$/;
   
@@ -18,6 +19,7 @@ export class RegisterComponent implements OnInit {
   }
 
   createRegisterForm(): void {
+    this.loading = true
     this.registerForm = this.fb.group({
       nombre: [null, [Validators.required]],
       apellido: [null, [Validators.required]],
@@ -27,5 +29,6 @@ export class RegisterComponent implements OnInit {
       password: [null, [Validators.required, Validators.pattern(this.passwordRegex)]],
       passwordRepeat: [null, [Validators.required]],
     });
+    this.loading = false;
   }
 }
