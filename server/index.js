@@ -8,7 +8,7 @@ app.use(express.json());
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '12345',
+    password: 'root',
     database: 'mylibrary',
     port: 3306
 });
@@ -42,12 +42,6 @@ app.post('/login', (req, res) => {
         }
     });
 });
-
-// Ruta de prueba
-app.get('/', (req, res) => {
-    res.send('¡Hola, mundo!');
-});
-
 
 
 app.post('/RegistrarUsuario', (req, res) => {
@@ -244,11 +238,57 @@ app.post('/RegistrarUsuario', (req, res) => {
     });
   });
   
-  
-  
+
+  // Endpoint para comentar un libro
+app.post('/comentarLibro/:idUsuario/:idLibro', (req, res) => {
+  const idUsuario = req.params.idUsuario;
+  const idLibro = req.params.idLibro;
+  const { comentario } = req.body;
+
+  // Validar que los valores requeridos estén presentes
+  if (!idUsuario || !idLibro || !comentario) {
+      return res.status(400).json({ mensaje: 'Faltan datos requeridos para comentar el libro' });
+  }
+
+  // Validar que el usuario y el libro existan en las respectivas tablas
+  const validarUsuario = 'SELECT * FROM USUARIOS WHERE id_usuario = ?';
+  const validarLibro = 'SELECT * FROM LIBROS WHERE id_libro = ?';
+
+  connection.query(validarUsuario, [idUsuario], (errUsuario, resultsUsuario) => {
+      if (errUsuario || resultsUsuario.length === 0) {
+          return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+      }
+
+      connection.query(validarLibro, [idLibro], (errLibro, resultsLibro) => {
+          if (errLibro || resultsLibro.length === 0) {
+              return res.status(404).json({ mensaje: 'Libro no encontrado' });
+          }
+
+          // Realizar el comentario del libro
+          const insertarComentario = 'INSERT INTO COMENTARIOS (id_usuario, id_libro, comentario) VALUES (?, ?, ?)';
+          connection.query(insertarComentario, [idUsuario, idLibro, comentario], (errComentario, resultsComentario) => {
+              if (errComentario) {
+                  console.error('Error al registrar el comentario en la base de datos:', errComentario);
+                  res.status(500).json({ mensaje: 'Error al registrar el comentario' });
+              } else {
+                  console.log('Comentario registrado con éxito');
+                  res.json({ mensaje: 'Comentario registrado con éxito', id_usuario: idUsuario, id_libro: idLibro, comentario });
+              }
+          });
+      });
+  });
+});
+
+
+  // Ruta de prueba
+app.get('/', (req, res) => {
+  res.send('¡Hola, mundo!');
+});
+
+
 
 // Iniciar el servidor
 const port = 3000;
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
 });
