@@ -24,7 +24,6 @@ connection.connect((err) => {
 // Endpoint de login
 app.post('/login', (req, res) => {
     const { correo, password } = req.body;
-    
     // Consulta SQL para verificar las credenciales
     const query = 'SELECT * FROM USUARIOS WHERE correo = ? AND password = ?';
 
