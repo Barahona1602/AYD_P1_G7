@@ -153,6 +153,84 @@ app.post('/RegistrarUsuario', (req, res) => {
   });
   
 
+  app.post('/VenderLibro', (req, res) => {
+    const { id_usuario, id_libro } = req.body;
+  
+    // Validar que los valores requeridos estén presentes
+    if (!id_usuario || !id_libro) {
+      return res.status(400).json({ mensaje: 'Faltan datos requeridos para vender el libro' });
+    }
+  
+    // Validar que el usuario y el libro existan en las respectivas tablas
+    const validarUsuario = 'SELECT * FROM usuarios WHERE id_usuario = ?';
+    const validarLibro = 'SELECT * FROM libros WHERE id_libro = ?';
+  
+    connection.query(validarUsuario, [id_usuario], (errUsuario, resultsUsuario) => {
+      if (errUsuario || resultsUsuario.length === 0) {
+        return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+      }
+  
+      connection.query(validarLibro, [id_libro], (errLibro, resultsLibro) => {
+        if (errLibro || resultsLibro.length === 0) {
+          return res.status(404).json({ mensaje: 'Libro no encontrado' });
+        }
+  
+        // Realizar la venta del libro
+        const insertarVenta = 'INSERT INTO ventas (id_usuario, id_libro) VALUES (?, ?)';
+        connection.query(insertarVenta, [id_usuario, id_libro], (errVenta, resultsVenta) => {
+          if (errVenta) {
+            console.error('Error al registrar la venta en la base de datos:', errVenta);
+            res.status(500).json({ mensaje: 'Error al registrar la venta' });
+          } else {
+            console.log('Venta registrada con éxito');
+            res.json({ mensaje: 'Libro vendido con éxito', id_usuario, id_libro });
+          }
+        });
+      });
+    });
+  });
+  
+
+  app.post('/RentarLibro', (req, res) => {
+    const { id_usuario, id_libro, fecha_devolucion } = req.body;
+  
+    // Validar que los valores requeridos estén presentes
+    if (!id_usuario || !id_libro || !fecha_devolucion) {
+      return res.status(400).json({ mensaje: 'Faltan datos requeridos para rentar el libro' });
+    }
+  
+    // Validar que el usuario y el libro existan en las respectivas tablas
+    const validarUsuario = 'SELECT * FROM usuarios WHERE id_usuario = ?';
+    const validarLibro = 'SELECT * FROM libros WHERE id_libro = ?';
+  
+    connection.query(validarUsuario, [id_usuario], (errUsuario, resultsUsuario) => {
+      if (errUsuario || resultsUsuario.length === 0) {
+        return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+      }
+  
+      connection.query(validarLibro, [id_libro], (errLibro, resultsLibro) => {
+        if (errLibro || resultsLibro.length === 0) {
+          return res.status(404).json({ mensaje: 'Libro no encontrado' });
+        }
+  
+        // Realizar la renta del libro
+        const insertarRenta = 'INSERT INTO rentas (id_usuario, id_libro, fecha_devolucion) VALUES (?, ?, ?)';
+        connection.query(insertarRenta, [id_usuario, id_libro, fecha_devolucion], (errRenta, resultsRenta) => {
+          if (errRenta) {
+            console.error('Error al registrar la renta en la base de datos:', errRenta);
+            res.status(500).json({ mensaje: 'Error al registrar la renta' });
+          } else {
+            console.log('Renta registrada con éxito');
+            res.json({ mensaje: 'Libro rentado con éxito', id_usuario, id_libro, fecha_devolucion });
+          }
+        });
+      });
+    });
+  });
+  
+  
+  
+
 // Iniciar el servidor
 app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
