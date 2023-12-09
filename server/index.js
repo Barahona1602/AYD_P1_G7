@@ -44,7 +44,7 @@ app.post('/login', (req, res) => {
 });
 
 
-app.post('/RegistrarUsuario', (req, res) => {
+app.post('/registrarUsuario', (req, res) => {
     // Obtener datos del formulario de registro
     const { nombre, apellido, telefono, correo, contraseña, fechaNacimiento } = req.body;
   
@@ -56,7 +56,7 @@ app.post('/RegistrarUsuario', (req, res) => {
     }
   
     // Query SQL para insertar un nuevo usuario
-    const sql = 'INSERT INTO usuarios (nombre, apellido, numero_tel, correo, password, fecha_nac) VALUES (?, ?, ?, ?, ?, ?)';
+    const sql = 'INSERT INTO USUARIOS (nombre, apellido, numero_tel, correo, password, fecha_nac) VALUES (?, ?, ?, ?, ?, ?)';
   
     // Parámetros para la consulta
     const values = [nombre, apellido, telefono, correo, contraseña, fechaNacimiento];
@@ -74,7 +74,7 @@ app.post('/RegistrarUsuario', (req, res) => {
   });
   
 
-  app.post('/AgregarLibro', (req, res) => {
+  app.post('/agregarLibro', (req, res) => {
     // Obtener datos del formulario para agregar libro
     const { sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado } = req.body;
   
@@ -84,7 +84,7 @@ app.post('/RegistrarUsuario', (req, res) => {
     }
   
     // Query SQL para insertar un nuevo libro
-    const sql = 'INSERT INTO libros (sinopsis, precio_compra, precio_renta, autor, año_publicacion, editorial, estado) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const sql = 'INSERT INTO LIBROS (sinopsis, precio_compra, precio_renta, autor, año_publicacion, editorial, estado) VALUES (?, ?, ?, ?, ?, ?, ?)';
   
     // Parámetros para la consulta
     const values = [sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado];
@@ -102,7 +102,7 @@ app.post('/RegistrarUsuario', (req, res) => {
   });
 
   
-  app.put('/ActualizarLibro/:idLibro', (req, res) => {
+  app.put('/actualizarLibro/:idLibro', (req, res) => {
     const idLibro = req.params.idLibro;
   
     // Obtener datos del formulario para actualizar libro
@@ -124,7 +124,7 @@ app.post('/RegistrarUsuario', (req, res) => {
     if (estado) updates.push(`estado = '${estado}'`);
   
     // Query SQL para actualizar un libro por su ID
-    const sql = `UPDATE libros SET ${updates.join(', ')} WHERE id_libro = ?`;
+    const sql = `UPDATE LIBROS SET ${updates.join(', ')} WHERE id_libro = ?`;
   
     // Parámetros para la consulta
     const values = [idLibro];
@@ -141,11 +141,11 @@ app.post('/RegistrarUsuario', (req, res) => {
     });
   });
   
-  app.delete('/EliminarLibro/:idLibro', (req, res) => {
+  app.delete('/eliminarLibro/:idLibro', (req, res) => {
     const idLibro = req.params.idLibro;
   
     // Query SQL para eliminar un libro por su ID
-    const sql = 'DELETE FROM libros WHERE id_libro = ?';
+    const sql = 'DELETE FROM LIBROS WHERE id_libro = ?';
   
     // Parámetros para la consulta
     const values = [idLibro];
@@ -163,7 +163,7 @@ app.post('/RegistrarUsuario', (req, res) => {
   });
   
 
-  app.post('/VenderLibro', (req, res) => {
+  app.post('/venderLibro', (req, res) => {
     const { id_usuario, id_libro } = req.body;
   
     // Validar que los valores requeridos estén presentes
@@ -172,8 +172,8 @@ app.post('/RegistrarUsuario', (req, res) => {
     }
   
     // Validar que el usuario y el libro existan en las respectivas tablas
-    const validarUsuario = 'SELECT * FROM usuarios WHERE id_usuario = ?';
-    const validarLibro = 'SELECT * FROM libros WHERE id_libro = ?';
+    const validarUsuario = 'SELECT * FROM USUARIOS WHERE id_usuario = ?';
+    const validarLibro = 'SELECT * FROM LIBROS WHERE id_libro = ?';
   
     connection.query(validarUsuario, [id_usuario], (errUsuario, resultsUsuario) => {
       if (errUsuario || resultsUsuario.length === 0) {
@@ -186,7 +186,7 @@ app.post('/RegistrarUsuario', (req, res) => {
         }
   
         // Realizar la venta del libro
-        const insertarVenta = 'INSERT INTO ventas (id_usuario, id_libro) VALUES (?, ?)';
+        const insertarVenta = 'INSERT INTO VENTAS (id_usuario, id_libro) VALUES (?, ?)';
         connection.query(insertarVenta, [id_usuario, id_libro], (errVenta, resultsVenta) => {
           if (errVenta) {
             console.error('Error al registrar la venta en la base de datos:', errVenta);
@@ -201,7 +201,7 @@ app.post('/RegistrarUsuario', (req, res) => {
   });
   
 
-  app.post('/RentarLibro', (req, res) => {
+  app.post('/rentarLibro', (req, res) => {
     const { id_usuario, id_libro, fecha_devolucion } = req.body;
   
     // Validar que los valores requeridos estén presentes
@@ -210,8 +210,8 @@ app.post('/RegistrarUsuario', (req, res) => {
     }
   
     // Validar que el usuario y el libro existan en las respectivas tablas
-    const validarUsuario = 'SELECT * FROM usuarios WHERE id_usuario = ?';
-    const validarLibro = 'SELECT * FROM libros WHERE id_libro = ?';
+    const validarUsuario = 'SELECT * FROM USUARIOS WHERE id_usuario = ?';
+    const validarLibro = 'SELECT * FROM LIBROS WHERE id_libro = ?';
   
     connection.query(validarUsuario, [id_usuario], (errUsuario, resultsUsuario) => {
       if (errUsuario || resultsUsuario.length === 0) {
@@ -224,7 +224,7 @@ app.post('/RegistrarUsuario', (req, res) => {
         }
   
         // Realizar la renta del libro
-        const insertarRenta = 'INSERT INTO rentas (id_usuario, id_libro, fecha_devolucion) VALUES (?, ?, ?)';
+        const insertarRenta = 'INSERT INTO RENTAS (id_usuario, id_libro, fecha_devolucion) VALUES (?, ?, ?)';
         connection.query(insertarRenta, [id_usuario, id_libro, fecha_devolucion], (errRenta, resultsRenta) => {
           if (errRenta) {
             console.error('Error al registrar la renta en la base de datos:', errRenta);
