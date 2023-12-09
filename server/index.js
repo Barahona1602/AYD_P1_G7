@@ -1,8 +1,10 @@
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const mysql = require('mysql');
 
 app.use(express.json());
+app.use(cors());
 
 // Conexión a la base de datos
 const connection = mysql.createConnection({

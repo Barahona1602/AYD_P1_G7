@@ -37,3 +37,6 @@
 /frontend/testem.log
 /frontend/typings
 
+
+# Docker
+/frontend/docker/mysql_data

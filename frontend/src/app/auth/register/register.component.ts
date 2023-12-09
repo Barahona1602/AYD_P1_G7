@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../auth.service';
+import { take } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -8,6 +11,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
   
+  showAlert: boolean = false;
+  alertMessage: string = ""
 
   passwordRegex = /^(?=.*[A-Z])(?=.*[\W])(?=.*[0-9])(?=.*[a-z]).{8,128}$/;
 
@@ -23,8 +28,12 @@ export class RegisterComponent implements OnInit {
 
   loading: boolean = false;
 
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
   
-  constructor(private fb: FormBuilder) {}
   ngOnInit(): void {}
 
   get notValidNombre(): boolean {
@@ -52,5 +61,30 @@ export class RegisterComponent implements OnInit {
     return this.registerForm.get("passwordRepeat").value !== this.registerForm.get("password").value;
   }
 
+  register(): void {
+    this.showAlert = false;
+    if (this.registerForm.invalid) {
+      return;
+    }
+    this.registerForm.disable();
+    const registerBody = {
+      nombre: this.registerForm.get("nombre").value,
+      apellido: this.registerForm.get("apellido").value,
+      telefono: this.registerForm.get("telefono").value,
+      correo: this.registerForm.get("correo").value,
+      fechaNacimiento: this.registerForm.get("fechaNacimiento").value,
+      contraseña: this.registerForm.get("password").value,
+    };
 
+    this.authService.register(registerBody).pipe(take(1)).subscribe(resp => {
+      console.log(resp);
+      this.authService.saveToken("token");
+      this.router.navigate(["login"]);
+    }, err => {
+      console.log(err);
+      this.showAlert = true;
+      this.alertMessage = err.error.mensaje ?? "Algo salió mal.";
+      this.registerForm.enable();
+    });
+  }
 }
