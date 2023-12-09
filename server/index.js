@@ -163,6 +163,38 @@ app.post('/RegistrarUsuario', (req, res) => {
   });
   
 
+  // Endpoint para eliminar un usuario
+app.delete('/eliminarUsuario/:idUsuario', (req, res) => {
+  const idUsuario = req.params.idUsuario;
+
+  // Validar que el valor requerido esté presente
+  if (!idUsuario) {
+    return res.status(400).json({ mensaje: 'Faltan datos requeridos para eliminar el usuario' });
+  }
+
+  // Validar que el usuario exista en la tabla
+  const validarUsuario = 'SELECT * FROM USUARIOS WHERE id_usuario = ?';
+
+  connection.query(validarUsuario, [idUsuario], (errUsuario, resultsUsuario) => {
+    if (errUsuario || resultsUsuario.length === 0) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    // Realizar la eliminación del usuario
+    const eliminarUsuario = 'DELETE FROM USUARIOS WHERE id_usuario = ?';
+    connection.query(eliminarUsuario, [idUsuario], (errEliminar, resultsEliminar) => {
+      if (errEliminar) {
+        console.error('Error al eliminar el usuario en la base de datos:', errEliminar);
+        res.status(500).json({ mensaje: 'Error al eliminar el usuario' });
+      } else {
+        console.log('Usuario eliminado con éxito');
+        res.json({ mensaje: 'Usuario eliminado con éxito', id_usuario: idUsuario });
+      }
+    });
+  });
+});
+
+
   app.post('/VenderLibro', (req, res) => {
     const { id_usuario, id_libro } = req.body;
   
