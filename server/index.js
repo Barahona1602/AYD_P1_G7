@@ -280,6 +280,55 @@ app.post('/comentarLibro/:idUsuario/:idLibro', (req, res) => {
 });
 
 
+// Endpoint para eliminar un comentario
+app.delete('/eliminarComentario/:idUsuario/:idLibro/:idComentario', (req, res) => {
+  const idUsuario = req.params.idUsuario;
+  const idLibro = req.params.idLibro;
+  const idComentario = req.params.idComentario;
+
+  // Validar que los valores requeridos estén presentes
+  if (!idUsuario || !idLibro || !idComentario) {
+    return res.status(400).json({ mensaje: 'Faltan datos requeridos para eliminar el comentario' });
+  }
+
+  // Validar que el usuario, el libro y el comentario existan en las respectivas tablas
+  const validarUsuario = 'SELECT * FROM USUARIOS WHERE id_usuario = ?';
+  const validarLibro = 'SELECT * FROM LIBROS WHERE id_libro = ?';
+  const validarComentario = 'SELECT * FROM COMENTARIOS WHERE id_usuario = ? AND id_libro = ? AND id_comentario = ?';
+
+  connection.query(validarUsuario, [idUsuario], (errUsuario, resultsUsuario) => {
+    if (errUsuario || resultsUsuario.length === 0) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    connection.query(validarLibro, [idLibro], (errLibro, resultsLibro) => {
+      if (errLibro || resultsLibro.length === 0) {
+        return res.status(404).json({ mensaje: 'Libro no encontrado' });
+      }
+
+      connection.query(validarComentario, [idUsuario, idLibro, idComentario], (errComentario, resultsComentario) => {
+        if (errComentario || resultsComentario.length === 0) {
+          return res.status(404).json({ mensaje: 'Comentario no encontrado' });
+        }
+
+        // Realizar la eliminación del comentario
+        const eliminarComentario = 'DELETE FROM COMENTARIOS WHERE id_usuario = ? AND id_libro = ? AND id_comentario = ?';
+        connection.query(eliminarComentario, [idUsuario, idLibro, idComentario], (errEliminar, resultsEliminar) => {
+          if (errEliminar) {
+            console.error('Error al eliminar el comentario en la base de datos:', errEliminar);
+            res.status(500).json({ mensaje: 'Error al eliminar el comentario' });
+          } else {
+            console.log('Comentario eliminado con éxito');
+            res.json({ mensaje: 'Comentario eliminado con éxito', id_usuario: idUsuario, id_libro: idLibro, id_comentario: idComentario });
+          }
+        });
+      });
+    });
+  });
+});
+
+
+
   // Ruta de prueba
 app.get('/', (req, res) => {
   res.send('¡Hola, mundo!');
