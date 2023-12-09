@@ -76,6 +76,39 @@ app.post('/registrarUsuario', (req, res) => {
   });
   
 
+  app.put('/editarUsuario/:idUsuario', (req, res) => {
+    const idUsuario = req.params.idUsuario;
+    const { nombre, apellido, numero_tel, correo, password, fecha_nac } = req.body;
+
+    if (!nombre && !apellido && !numero_tel && !correo && !password && !fecha_nac) {
+        return res.status(400).json({ mensaje: 'No se proporcionaron datos para actualizar el usuario' });
+    }
+
+    const updates = [];
+    if (nombre) updates.push(`nombre = '${nombre}'`);
+    if (apellido) updates.push(`apellido = '${apellido}'`);
+    if (numero_tel) updates.push(`numero_tel = '${numero_tel}'`);
+    if (correo) updates.push(`correo = '${correo}'`);
+    if (password) updates.push(`password = '${password}'`);
+    if (fecha_nac) updates.push(`fecha_nac = '${fecha_nac}'`);
+
+    const sql = `UPDATE USUARIOS SET ${updates.join(', ')} WHERE id_usuario = ?`;
+
+    const values = [idUsuario];
+
+    connection.query(sql, values, (err, results) => {
+        if (err) {
+            console.error('Error al actualizar usuario en la base de datos:', err);
+            res.status(500).json({ mensaje: 'Error al actualizar usuario' });
+        } else {
+            console.log('Usuario actualizado con éxito');
+            res.json({ mensaje: 'Usuario actualizado con éxito', idUsuario });
+        }
+    });
+});
+
+
+
   app.post('/agregarLibro', (req, res) => {
     // Obtener datos del formulario para agregar libro
     const { sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado } = req.body;
@@ -326,6 +359,226 @@ app.delete('/eliminarComentario/:idUsuario/:idLibro/:idComentario', (req, res) =
         });
       });
     });
+  });
+});
+
+
+// GETS
+app.get('/usuarios', (req, res) => {
+  const query = 'SELECT * FROM USUARIOS';
+  connection.query(query, (error, results) => {
+      if (error) {
+          console.error('Error al obtener usuarios:', error);
+          res.status(500).json({ mensaje: 'Error al obtener usuarios' });
+      } else {
+          res.json({ usuarios: results });
+      }
+  });
+});
+
+
+app.get('/usuarios/:idUsuario', (req, res) => {
+  const userId = req.params.idUsuario; // Obtener el parámetro de la URL
+  const query = 'SELECT * FROM USUARIOS WHERE id_usuario = ?';
+
+  connection.query(query, [userId], (error, results) => {
+      if (error) {
+          console.error('Error al obtener usuario:', error);
+          res.status(500).json({ mensaje: 'Error al obtener usuario' });
+      } else {
+          res.json({ usuario: results[0] });
+      }
+  });
+});
+
+
+
+app.get('/libros', (req, res) => {
+  const query = 'SELECT * FROM LIBROS';
+  connection.query(query, (error, results) => {
+      if (error) {
+          console.error('Error al obtener libros:', error);
+          res.status(500).json({ mensaje: 'Error al obtener libros' });
+      } else {
+          res.json({ libros: results });
+      }
+  });
+});
+
+
+app.get('/libros/:idLibro', (req, res) => {
+  const libroId = req.params.idLibro; // Obtener el parámetro de la URL
+  const query = 'SELECT * FROM LIBROS WHERE id_libro = ?';
+
+  connection.query(query, [libroId], (error, results) => {
+      if (error) {
+          console.error('Error al obtener libro:', error);
+          res.status(500).json({ mensaje: 'Error al obtener libro' });
+      } else {
+          res.json({ libro: results[0] });
+      }
+  });
+});
+
+
+app.get('/comentarios', (req, res) => {
+  const query = `
+      SELECT COMENTARIOS.id_comentario, COMENTARIOS.comentario, USUARIOS.nombre AS nombre_usuario, LIBROS.titulo AS titulo_libro
+      FROM COMENTARIOS
+      INNER JOIN USUARIOS ON COMENTARIOS.id_usuario = USUARIOS.id_usuario
+      INNER JOIN LIBROS ON COMENTARIOS.id_libro = LIBROS.id_libro;
+  `;
+  connection.query(query, (error, results) => {
+      if (error) {
+          console.error('Error al obtener comentarios:', error);
+          res.status(500).json({ mensaje: 'Error al obtener comentarios' });
+      } else {
+          res.json({ comentarios: results });
+      }
+  });
+});
+
+
+app.get('/libros/:idLibro/comentarios', (req, res) => {
+  const libroId = req.params.idLibro; 
+
+  const query = `
+      SELECT COMENTARIOS.id_comentario, COMENTARIOS.comentario, USUARIOS.nombre AS nombre_usuario
+      FROM COMENTARIOS
+      INNER JOIN USUARIOS ON COMENTARIOS.id_usuario = USUARIOS.id_usuario
+      WHERE COMENTARIOS.id_libro = ?`;
+
+  connection.query(query, [libroId], (error, results) => {
+      if (error) {
+          console.error('Error al obtener comentarios del libro:', error);
+          res.status(500).json({ mensaje: 'Error al obtener comentarios del libro' });
+      } else {
+          res.json({ comentarios: results });
+      }
+  });
+});
+
+
+
+app.get('/ventas', (req, res) => {
+  const query = `
+      SELECT VENTAS.id_venta, USUARIOS.nombre AS nombre_usuario, LIBROS.titulo AS titulo_libro
+      FROM VENTAS
+      INNER JOIN USUARIOS ON VENTAS.id_usuario = USUARIOS.id_usuario
+      INNER JOIN LIBROS ON VENTAS.id_libro = LIBROS.id_libro;
+  `;
+  connection.query(query, (error, results) => {
+      if (error) {
+          console.error('Error al obtener ventas:', error);
+          res.status(500).json({ mensaje: 'Error al obtener ventas' });
+      } else {
+          res.json({ ventas: results });
+      }
+  });
+});
+
+
+app.get('/ventas/usuario/:idUsuario', (req, res) => {
+  const userId = req.params.idUsuario;
+
+  // Query SQL para obtener las ventas de un usuario específico
+  const query = `
+      SELECT VENTAS.id_venta, LIBROS.titulo AS titulo_libro
+      FROM VENTAS
+      INNER JOIN LIBROS ON VENTAS.id_libro = LIBROS.id_libro
+      WHERE VENTAS.id_usuario = ?`;
+
+  connection.query(query, [userId], (error, results) => {
+      if (error) {
+          console.error('Error al obtener ventas del usuario:', error);
+          res.status(500).json({ mensaje: 'Error al obtener ventas del usuario' });
+      } else {
+          res.json({ ventas: results });
+      }
+  });
+});
+
+
+
+app.get('/ventas/libro/:idLibro', (req, res) => {
+  const libroId = req.params.idLibro;
+
+  // Query SQL para obtener las ventas de un libro específico
+  const query = `
+      SELECT VENTAS.id_venta, USUARIOS.nombre AS nombre_usuario
+      FROM VENTAS
+      INNER JOIN USUARIOS ON VENTAS.id_usuario = USUARIOS.id_usuario
+      WHERE VENTAS.id_libro = ?`;
+
+  connection.query(query, [libroId], (error, results) => {
+      if (error) {
+          console.error('Error al obtener ventas del libro:', error);
+          res.status(500).json({ mensaje: 'Error al obtener ventas del libro' });
+      } else {
+          res.json({ ventas: results });
+      }
+  });
+});
+
+
+
+app.get('/rentas', (req, res) => {
+  const query = `
+      SELECT RENTAS.id_renta, USUARIOS.nombre AS nombre_usuario, LIBROS.titulo AS titulo_libro, RENTAS.fecha_devolucion
+      FROM RENTAS
+      INNER JOIN USUARIOS ON RENTAS.id_usuario = USUARIOS.id_usuario
+      INNER JOIN LIBROS ON RENTAS.id_libro = LIBROS.id_libro;
+  `;
+  connection.query(query, (error, results) => {
+      if (error) {
+          console.error('Error al obtener rentas:', error);
+          res.status(500).json({ mensaje: 'Error al obtener rentas' });
+      } else {
+          res.json({ rentas: results });
+      }
+  });
+});
+
+
+app.get('/rentas/usuario/:idUsuario', (req, res) => {
+  const userId = req.params.idUsuario;
+
+  // Query SQL para obtener las rentas de un usuario específico
+  const query = `
+      SELECT RENTAS.id_renta, LIBROS.titulo AS titulo_libro, RENTAS.fecha_devolucion
+      FROM RENTAS
+      INNER JOIN LIBROS ON RENTAS.id_libro = LIBROS.id_libro
+      WHERE RENTAS.id_usuario = ?`;
+
+  connection.query(query, [userId], (error, results) => {
+      if (error) {
+          console.error('Error al obtener rentas del usuario:', error);
+          res.status(500).json({ mensaje: 'Error al obtener rentas del usuario' });
+      } else {
+          res.json({ rentas: results });
+      }
+  });
+});
+
+
+
+app.get('/rentas/libro/:idLibro', (req, res) => {
+  const libroId = req.params.idLibro;
+
+  // Query SQL para obtener las rentas de un libro específico
+  const query = `
+      SELECT RENTAS.id_renta, USUARIOS.nombre AS nombre_usuario, RENTAS.fecha_devolucion
+      FROM RENTAS
+      INNER JOIN USUARIOS ON RENTAS.id_usuario = USUARIOS.id_usuario
+      WHERE RENTAS.id_libro = ?`;
+
+  connection.query(query, [libroId], (error, results) => {
+      if (error) {
+          console.error('Error al obtener rentas del libro:', error);
+          res.status(500).json({ mensaje: 'Error al obtener rentas del libro' });
+      } else {
+          res.json({ rentas: results });
+      }
   });
 });
 
