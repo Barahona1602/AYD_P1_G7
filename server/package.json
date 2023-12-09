@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "mysql": "^2.18.1"
   },
@@ -18,7 +19,6 @@
     "supertest": "^6.3.3"
   },
   "jest": {
-    "testEnvironment": "node"  
+    "testEnvironment": "node"
   }
-
 }
