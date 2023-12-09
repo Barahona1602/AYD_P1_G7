@@ -12,7 +12,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "nodemon": "^3.0.2"
   },
   "devDependencies": {
     "jest": "^29.7.0",
@@ -20,5 +21,8 @@
   },
   "jest": {
     "testEnvironment": "node"
-  }
+  },
+    "watch": ["src"],
+    "ext": "js",
+    "exec": "node"
 }
