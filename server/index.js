@@ -30,14 +30,14 @@ app.post('/login', (req, res) => {
     connection.query(query, [correo, password], (error, results) => {
         if (error) {
             console.error('Error en la consulta:', error);
-            res.status(500).send('Error en el servidor');
+            res.status(500).json({ mensaje: 'Error en el servidor' });
         } else {
             if (results.length > 0) {
                 // Usuario autenticado
-                res.status(200).send('Acceso concedido');
+                res.status(200).json({ mensaje: 'Acceso concedido' });
             } else {
                 // Usuario no autenticado
-                res.status(401).send('Usuario o contraseña incorrectos');
+                res.status(401).json({ mensaje: 'Usuario o contraseña incorrectos' });
             }
         }
     });
