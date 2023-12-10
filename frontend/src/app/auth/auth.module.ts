@@ -5,10 +5,12 @@ import { AuthRoutingModule } from "./auth-routing.module";
 import { RegisterComponent } from "./register/register.component";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { AuthService } from "./auth.service";
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
-    RegisterComponent
+    RegisterComponent,
+    LoginComponent
   ],
   providers: [
     AuthService

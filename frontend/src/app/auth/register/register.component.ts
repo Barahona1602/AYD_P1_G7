@@ -6,8 +6,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  templateUrl: './register.component.html'
 })
 export class RegisterComponent implements OnInit {
   
@@ -78,7 +77,6 @@ export class RegisterComponent implements OnInit {
 
     this.authService.register(registerBody).pipe(take(1)).subscribe(resp => {
       console.log(resp);
-      this.authService.saveToken("token");
       this.router.navigate(["login"]);
     }, err => {
       console.log(err);

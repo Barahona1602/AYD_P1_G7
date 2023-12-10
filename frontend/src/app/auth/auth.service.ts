@@ -11,12 +11,20 @@ export class AuthService {
     private router: Router
   ) {}
 
+  get isLogedIn(): boolean {
+    return localStorage.getItem("token") !== undefined && localStorage.getItem("token") !== null;
+  }
+
   get token(): string {
     return localStorage.getItem("token");
   }
 
   register(registerBody: any): Observable<any> {
     return this.httpClient.post(`${this.serverUrl}/registrarUsuario`, registerBody);
+  }
+  
+  login(loginBody: any): Observable<any> {
+    return this.httpClient.post(`${this.serverUrl}/login`, loginBody);
   }
 
   getHello(): Observable<any> {
