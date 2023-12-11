@@ -69,7 +69,7 @@
             {{ alertMessage }}
           </div>
           <div class="d-flex justify-content-between mt-2">
-            <a class="text-primary">Ya tienes cuenta?</a>
+            <a class="text-primary" [routerLink]="['/auth/login']">Ya tienes cuenta?</a>
             <button type="button" class="btn btn-primary" [disabled]="registerForm.invalid" (click)="register()">Registrar</button>
           </div>
         </form>
