@@ -35,8 +35,7 @@ app.post('/login', (req, res) => {
           res.status(500).json({ mensaje: 'Error en el servidor' });
       } else {
           if (results.length > 0) {
-              // Usuario autenticado
-              const usuario = results[0]; // Tomar el primer resultado
+              const usuario = results[0]; 
               res.status(200).json({ mensaje: 'Acceso concedido', usuario });
           } else {
               // Usuario no autenticado
