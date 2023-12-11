@@ -64,20 +64,20 @@ app.post('/RegistrarUsuario', (req, res) => {
   });
   
 
-  app.post('/AgregarLibro', (req, res) => {
+  app.post('/agregarLibro', (req, res) => {
     // Obtener datos del formulario para agregar libro
-    const { sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado } = req.body;
+    const { titulo, sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado } = req.body;
   
     // Validar que los datos requeridos estén presentes
-    if (!sinopsis || !precioCompra || !autor || !anoPublicacion || !editorial || !estado) {
+    if (!titulo || !sinopsis || !precioCompra || !autor || !anoPublicacion || !editorial || !estado) {
       return res.status(400).json({ mensaje: 'Faltan datos requeridos para agregar el libro' });
     }
   
-    // Query SQL para insertar un nuevo libro
-    const sql = 'INSERT INTO libros (sinopsis, precio_compra, precio_renta, autor, año_publicacion, editorial, estado) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    // Query SQL para insertar un nuevo libro con la columna "Titulo"
+    const sql = 'INSERT INTO LIBROS (Titulo, sinopsis, precio_compra, precio_renta, autor, año_publicacion, editorial, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
   
     // Parámetros para la consulta
-    const values = [sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado];
+    const values = [titulo, sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado];
   
     // Ejecutar la consulta
     connection.query(sql, values, (err, results) => {
@@ -86,10 +86,11 @@ app.post('/RegistrarUsuario', (req, res) => {
         res.status(500).json({ mensaje: 'Error al agregar libro' });
       } else {
         console.log('Libro agregado con éxito');
-        res.json({ mensaje: 'Libro agregado con éxito', libro: { sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado } });
+        res.json({ mensaje: 'Libro agregado con éxito', libro: { titulo, sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado } });
       }
     });
   });
+  
 
   
   app.put('/ActualizarLibro/:idLibro', (req, res) => {
