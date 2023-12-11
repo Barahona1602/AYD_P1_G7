@@ -23,25 +23,27 @@ connection.connect((err) => {
 
 // Endpoint de login
 app.post('/login', (req, res) => {
-    const { correo, password } = req.body;
-    // Consulta SQL para verificar las credenciales
-    const query = 'SELECT * FROM USUARIOS WHERE correo = ? AND password = ?';
+  const { correo, password } = req.body;
+  // Consulta SQL para verificar las credenciales
+  const query = 'SELECT * FROM USUARIOS WHERE correo = ? AND password = ?';
 
-    connection.query(query, [correo, password], (error, results) => {
-        if (error) {
-            console.error('Error en la consulta:', error);
-            res.status(500).json({ mensaje: 'Error en el servidor' });
-        } else {
-            if (results.length > 0) {
-                // Usuario autenticado
-                res.status(200).json({ mensaje: 'Acceso concedido' });
-            } else {
-                // Usuario no autenticado
-                res.status(401).json({ mensaje: 'Usuario o contraseña incorrectos' });
-            }
-        }
-    });
+  connection.query(query, [correo, password], (error, results) => {
+      if (error) {
+          console.error('Error en la consulta:', error);
+          res.status(500).json({ mensaje: 'Error en el servidor' });
+      } else {
+          if (results.length > 0) {
+              // Usuario autenticado
+              const usuario = results[0]; // Tomar el primer resultado
+              res.status(200).json({ mensaje: 'Acceso concedido', usuario });
+          } else {
+              // Usuario no autenticado
+              res.status(401).json({ mensaje: 'Usuario o contraseña incorrectos' });
+          }
+      }
+  });
 });
+
 
 
 app.post('/registrarUsuario', (req, res) => {
@@ -52,7 +54,7 @@ app.post('/registrarUsuario', (req, res) => {
     const contraseñaValida = /^(?=.*\d)(?=.*[A-Z]).{8,}$/.test(contraseña);
   
     if (!contraseñaValida) {
-      return res.status(400).json({ mensaje: 'La contraseña no cumple con los requisitos' });
+      return res.status(400).json({ mensaje: 'La contraseña no cumple con los requisitos' }, );
     }
   
     // Query SQL para insertar un nuevo usuario
