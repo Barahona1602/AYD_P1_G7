@@ -1,0 +1,93 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-10">
+      <h1>
+        {{isNew ? "Nuevo Libro" : "Editar Libro"}}
+      </h1>
+    </div>
+    <div class="col-md-2">
+      <div class="d-grid gap-2">
+        <button class="btn btn-secondary" (click)="atras()">Regresar</button>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6" *ngIf="!loading">
+      <form [formGroup]="libroForm">
+        <div class="row mt-2">
+          <div class="col-lg">
+            <label class="form-label">Titulo</label>
+            <input type="text" class="form-control" [ngClass]="{'is-invalid': notValidTitulo}" formControlName="titulo">
+            <div class="invalid-feedback">
+              Titulo es requerido
+            </div>   
+          </div>
+          <div class="col-lg">
+            <label class="form-label">Autor</label>
+            <input type="text" class="form-control" [ngClass]="{'is-invalid': notValidAutor}" formControlName="autor">
+            <div class="invalid-feedback">
+              Autor es requerido
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-lg">
+            <label class="form-label">Editorial</label>
+            <input type="text" class="form-control" [ngClass]="{'is-invalid': notValidEditorial}" formControlName="editorial">
+            <div class="invalid-feedback">
+              Titulo es requerido
+            </div>   
+          </div>
+          <div class="col-lg">
+            <label class="form-label">Fecha de Publicacion</label>
+            <input type="date" class="form-control" [ngClass]="{'is-invalid': notValidPublicacion}" formControlName="publicacion">
+            <div class="invalid-feedback">
+              Publicacion es requerido
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-lg">
+            <label class="form-label">Precio de Compra</label>
+            <input type="number" class="form-control" [ngClass]="{'is-invalid': notValidPrecioCompra}" formControlName="precioCompra">
+            <div class="invalid-feedback">
+              Precio de compra es requerido
+            </div>   
+          </div>
+          <div class="col-lg">
+            <label class="form-label">Precio de Renta</label>
+            <input type="number" class="form-control" [ngClass]="{'is-invalid': notValidPrecioRenta}" formControlName="precioRenta">
+            <div class="invalid-feedback">
+              Precio de renta es requerido
+            </div>
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-lg">
+            <label class="form-label">Sinopsis</label>
+            <textarea cols="30" rows="5" class="form-control" [ngClass]="{'is-invalid': notValidSinopsis}" formControlName="sinopsis">
+            
+            </textarea>
+            <div class="invalid-feedback">
+              Sinopsis es requerido
+            </div>   
+          </div>
+        </div>
+        <div class="form-check mt-2">
+          <input class="form-check-input" type="checkbox" formControlName="estado">
+          <label class="form-check-label">
+            Disponible
+          </label>
+        </div>
+
+        <div class="d-flex justify-content-end mt-2">
+          <button type="button" class="btn btn-primary" [disabled]="libroForm.invalid" (click)="crearLibro()">Crear Libro</button>
+        </div>
+  
+      </form>
+    </div>
+    <div class="col-lg-3"></div>
+  </div>
+</div>
