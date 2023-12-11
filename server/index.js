@@ -111,7 +111,7 @@ app.post('/registrarUsuario', (req, res) => {
 
   app.post('/agregarLibro', (req, res) => {
     // Obtener datos del formulario para agregar libro
-    const { sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado } = req.body;
+    const { titulo, sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado } = req.body;
   
     // Validar que los datos requeridos estén presentes
     if (!sinopsis || !precioCompra || !autor || !anoPublicacion || !editorial || !estado) {
@@ -119,7 +119,7 @@ app.post('/registrarUsuario', (req, res) => {
     }
   
     // Query SQL para insertar un nuevo libro
-    const sql = 'INSERT INTO LIBROS (sinopsis, precio_compra, precio_renta, autor, año_publicacion, editorial, estado) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const sql = 'INSERT INTO LIBROS (titulo, sinopsis, precio_compra, precio_renta, autor, año_publicacion, editorial, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
   
     // Parámetros para la consulta
     const values = [sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado];
