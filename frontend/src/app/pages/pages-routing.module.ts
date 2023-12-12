@@ -7,14 +7,16 @@ import { BibliotecaComponent } from "./biblioteca/biblioteca.component";
 import { PerfilComponent } from "./perfil/perfil.component";
 import { CrearLibroComponent } from "./libros/crear-libro/crear-libro.component";
 import { EditarLibroComponent } from "./libros/editar-libro/editar-libro.component";
+import { UsuariosComponent } from "./usuarios/usuarios.component";
 
 const routes: Routes = [
   { path: "", component: HomeComponent },
   { path: "libros", component: LibrosComponent },
   { path: "libros/nuevo", component: CrearLibroComponent },
-  { path: "libros/editar/:id", component: EditarLibroComponent },
+  { path: "libros/editar/:idLibro", component: EditarLibroComponent },
   { path: "libros/:idLibro", component: LibroComponent },
   { path: "biblioteca", component: BibliotecaComponent },
+  { path: "usuarios", component: UsuariosComponent },
   { path: "perfil", component: PerfilComponent },
   { path: "**", redirectTo: "" }
 ];

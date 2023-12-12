@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { PagesService } from '../pages.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AlquilarLibroComponent } from 'src/app/modals/alquilar-libro/alquilar-libro.component';
 
 @Component({
   selector: 'app-libros',
@@ -15,7 +18,9 @@ export class LibrosComponent implements OnInit {
   
   constructor(
     private router: Router,
-    private pagesService: PagesService
+    private pagesService: PagesService,
+    public authService: AuthService,
+    private modalService: NgbModal
   ) {}
   
   ngOnInit(): void {
@@ -38,6 +43,24 @@ export class LibrosComponent implements OnInit {
 
   navegarACrearLibro(): void {
     this.router.navigate(["libros", "nuevo"]);
+  }
+
+  navegarAEditarLibro(idLibro: string): void {
+    this.router.navigate(["libros", "editar", idLibro]);
+  }
+
+  comprarLibro(idLibro: string): void {
+
+  }
+
+  rentarLibro(libro: any): void {
+    const modal = this.modalService.open(AlquilarLibroComponent, { size: "md" });
+    modal.componentInstance.tituloLibro = libro.titulo;
+
+    modal.result.then(result => {
+      console.log(result);
+    }, dismiss => {});
+
   }
 }
 

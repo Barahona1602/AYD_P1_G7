@@ -1,1 +1,66 @@
-<p>biblioteca works!</p>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-10">
+            <h1>
+                Biblioteca
+            </h1>
+        </div>
+    </div>
+    <hr>
+    <div class="d-flex justify-content-center">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <button class="nav-link" [ngClass]="{'active': vistaActiva === 'COMPRAS'}" (click)="verCompras()">Compras</button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" [ngClass]="{'active': vistaActiva === 'RENTAS'}" (click)="verRentas()">Rentas</button>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <ng-container *ngIf="vistaActiva === 'COMPRAS'">
+                <table class="table mt-3">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>
+                                Titulo
+                            </th>
+                            <th>
+                                Autor
+                            </th>
+                            <th>
+                                Editorial
+                            </th>
+                            <th>
+                                Valor de Compra
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </ng-container>
+            <ng-container *ngIf="vistaActiva === 'RENTAS'">
+                <table class="table mt-3">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>
+                                Titulo
+                            </th>
+                            <th>
+                                Autor
+                            </th>
+                            <th>
+                                Editorial
+                            </th>
+                            <th>
+                                Valor de Renta
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </ng-container>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+</div>

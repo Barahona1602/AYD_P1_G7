@@ -6,7 +6,7 @@ import { AuthService } from 'src/app/auth/auth.service';
   templateUrl: './navbar.component.html'
 })
 export class NavbarComponent {
-  constructor(private authService: AuthService) {}
+  constructor(public authService: AuthService) {}
   cerrarSesion(): void {
     this.authService.logOut();
   }

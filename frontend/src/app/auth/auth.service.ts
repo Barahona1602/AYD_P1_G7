@@ -15,8 +15,8 @@ export class AuthService {
     return localStorage.getItem("token") !== undefined && localStorage.getItem("token") !== null;
   }
 
-  get token(): string {
-    return localStorage.getItem("token");
+  get user(): string {
+    return JSON.parse(localStorage.getItem("token"));
   }
 
   register(registerBody: any): Observable<any> {
@@ -37,7 +37,7 @@ export class AuthService {
 
   logOut(): void {
     localStorage.removeItem("token");
-    this.router.navigate(["login"]);
+    this.router.navigate(["auth", "login"]);
   }
 
 }
