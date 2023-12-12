@@ -255,7 +255,8 @@ app.post('/RegistrarUsuario', (req, res) => {
         l.id_libro,
         l.sinopsis,
         l.precio_compra,
-        l.precio_renta
+        l.precio_renta,
+        v.fecha_venta AS fecha_operacion
       FROM ventas v
       JOIN libros l ON v.id_libro = l.id_libro
       JOIN usuarios u ON v.id_usuario = u.id_usuario
@@ -269,12 +270,13 @@ app.post('/RegistrarUsuario', (req, res) => {
         l.id_libro,
         l.sinopsis,
         l.precio_compra,
-        l.precio_renta
+        l.precio_renta,
+        r.fecha_renta AS fecha_operacion
       FROM rentas r
       JOIN libros l ON r.id_libro = l.id_libro
       JOIN usuarios u ON r.id_usuario = u.id_usuario
       WHERE r.id_usuario = ?
-      `;
+    `;
   
     // Ejecutar la consulta
     connection.query(historialQuery, [idUsuario, idUsuario], (err, results) => {
@@ -287,6 +289,7 @@ app.post('/RegistrarUsuario', (req, res) => {
     });
   });
   
+
 
 // Iniciar el servidor
 const port = 3000;
