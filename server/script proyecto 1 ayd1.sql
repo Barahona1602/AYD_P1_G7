@@ -30,9 +30,10 @@ CREATE TABLE IF NOT EXISTS LIBROS (
 
 -- Crear la tabla RENTAS
 CREATE TABLE IF NOT EXISTS RENTAS (
-	id_renta INT,
+	id_renta INT AUTO_INCREMENT,
     id_usuario INT,
     id_libro INT,
+    devuelto BOOLEAN DEFAULT false,
     fecha_devolucion DATE,
     FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario),
     FOREIGN KEY (id_libro) REFERENCES LIBROS(id_libro),
@@ -41,7 +42,7 @@ CREATE TABLE IF NOT EXISTS RENTAS (
 
 -- Crear la tabla VENTAS
 CREATE TABLE IF NOT EXISTS VENTAS (
-	id_venta INT,
+	id_venta INT AUTO_INCREMENT,
     id_usuario INT,
     id_libro INT,
     FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario),
@@ -51,7 +52,7 @@ CREATE TABLE IF NOT EXISTS VENTAS (
 
 -- Crear la tabla COMENTARIOS
 CREATE TABLE IF NOT EXISTS COMENTARIOS (
-	id_comentario INT,
+	id_comentario INT AUTO_INCREMENT,
     id_usuario INT,
     id_libro INT,
     comentario TEXT,

@@ -77,4 +77,24 @@ export class PagesService {
   updateUsuario(idUsuario: string, usuario: any): Observable<any> {
     return this.request(RequestMethod.PUT, `editarUsuario/${idUsuario}`, usuario);
   }
+
+  rentarLibro(rentarBody: any): Observable<any> {
+    return this.request(RequestMethod.POST, "rentarLibro", rentarBody);
+  }
+
+  comprarLibro(compraBody: any): Observable<any> {
+    return this.request(RequestMethod.POST, "venderLibro", compraBody);
+  }
+
+  getLibrosCompradosDeUsuario(idUsuario: string): Observable<any> {
+    return this.request(RequestMethod.GET, `ventas/usuario/${idUsuario}`);
+  }
+
+  getLibrosRentadosDeUsuario(idUsuario: string): Observable<any> {
+    return this.request(RequestMethod.GET, `rentas/usuario/${idUsuario}`);
+  }
+
+  devolverLibro(libroId: string, body: any): Observable<any> {
+    return this.request(RequestMethod.POST, `devolverLibro/${libroId}`, body);
+  }
 }
