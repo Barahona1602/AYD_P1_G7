@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS LIBROS (
     autor VARCHAR(30),
     año_publicacion INT,
     editorial VARCHAR(40),
-    estado ENUM('Ocupado', 'Disponible')
+    estado ENUM('Ocupado', 'Disponible','Vendido')
 );
 
 -- Crear la tabla RENTAS
