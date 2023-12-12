@@ -10,7 +10,7 @@ app.use(cors());
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '12345',
+    password: 'root',
     database: 'mylibrary',
     port: 3306
 });
@@ -238,41 +238,51 @@ app.delete('/eliminarUsuario/:idUsuario', (req, res) => {
 
 
 app.post('/venderLibro', (req, res) => {
-  const { id_usuario, id_libro } = req.body;
+    const { id_usuario, id_libro } = req.body;
 
-  // Validar que los valores requeridos estén presentes
-  if (!id_usuario || !id_libro) {
-      return res.status(400).json({ mensaje: 'Faltan datos requeridos para vender el libro' });
-  }
+    // Validar que los valores requeridos estén presentes
+    if (!id_usuario || !id_libro) {
+        return res.status(400).json({ mensaje: 'Faltan datos requeridos para vender el libro' });
+    }
 
-  // Validar que el usuario y el libro existan en las respectivas tablas
-  const validarUsuario = 'SELECT * FROM USUARIOS WHERE id_usuario = ?';
-  const validarLibro = 'SELECT * FROM LIBROS WHERE id_libro = ? AND estado = "Disponible"';
+    // Validar que el usuario y el libro existan en las respectivas tablas
+    const validarUsuario = 'SELECT * FROM USUARIOS WHERE id_usuario = ?';
+    const validarLibro = 'SELECT * FROM LIBROS WHERE id_libro = ? AND estado = "Disponible"';
 
-  connection.query(validarUsuario, [id_usuario], (errUsuario, resultsUsuario) => {
-      if (errUsuario || resultsUsuario.length === 0) {
-          return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-      }
+    connection.query(validarUsuario, [id_usuario], (errUsuario, resultsUsuario) => {
+        if (errUsuario || resultsUsuario.length === 0) {
+            return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+        }
 
-      connection.query(validarLibro, [id_libro], (errLibro, resultsLibro) => {
-          if (errLibro || resultsLibro.length === 0) {
-              return res.status(404).json({ mensaje: 'Libro no encontrado o no disponible' });
-          }
+        connection.query(validarLibro, [id_libro], (errLibro, resultsLibro) => {
+            if (errLibro || resultsLibro.length === 0) {
+                return res.status(404).json({ mensaje: 'Libro no encontrado o no disponible' });
+            }
 
-          // Realizar la venta del libro
-          const insertarVenta = 'INSERT INTO VENTAS (id_usuario, id_libro) VALUES (?, ?)';
-          connection.query(insertarVenta, [id_usuario, id_libro], (errVenta, resultsVenta) => {
-              if (errVenta) {
-                  console.error('Error al registrar la venta en la base de datos:', errVenta);
-                  res.status(500).json({ mensaje: 'Error al registrar la venta' });
-              } else {
-                  console.log('Venta registrada con éxito');
-                  res.json({ mensaje: 'Libro vendido con éxito', id_usuario, id_libro });
-              }
-          });
-      });
-  });
+            // Realizar la venta del libro
+            const insertarVenta = 'INSERT INTO VENTAS (id_usuario, id_libro) VALUES (?, ?)';
+            connection.query(insertarVenta, [id_usuario, id_libro], (errVenta, resultsVenta) => {
+                if (errVenta) {
+                    console.error('Error al registrar la venta en la base de datos:', errVenta);
+                    res.status(500).json({ mensaje: 'Error al registrar la venta' });
+                } else {
+                    // Actualizar el estado del libro a "Vendido"
+                    const actualizarEstadoLibro = 'UPDATE LIBROS SET estado = "Vendido" WHERE id_libro = ?';
+                    connection.query(actualizarEstadoLibro, [id_libro], (errEstadoLibro) => {
+                        if (errEstadoLibro) {
+                            console.error('Error al actualizar el estado del libro a vendido:', errEstadoLibro);
+                            res.status(500).json({ mensaje: 'Error al vender el libro' });
+                        } else {
+                            console.log('Venta registrada con éxito');
+                            res.json({ mensaje: 'Libro vendido con éxito', id_usuario, id_libro });
+                        }
+                    });
+                }
+            });
+        });
+    });
 });
+
 
 
 app.post('/rentarLibro', (req, res) => {
