@@ -115,7 +115,7 @@ app.post('/registrarUsuario', (req, res) => {
     const { titulo, sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado } = req.body;
   
     // Validar que los datos requeridos estén presentes
-    if (!sinopsis || !precioCompra || !autor || !anoPublicacion || !editorial || !estado) {
+    if (!titulo || !sinopsis || !precioCompra || !autor || !anoPublicacion || !editorial || !estado) {
       return res.status(400).json({ mensaje: 'Faltan datos requeridos para agregar el libro' });
     }
   
@@ -123,7 +123,7 @@ app.post('/registrarUsuario', (req, res) => {
     const sql = 'INSERT INTO LIBROS (titulo, sinopsis, precio_compra, precio_renta, autor, año_publicacion, editorial, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
   
     // Parámetros para la consulta
-    const values = [sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado];
+    const values = [titulo, sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado];
   
     // Ejecutar la consulta
     connection.query(sql, values, (err, results) => {

@@ -50,4 +50,31 @@ export class PagesService {
     return this.request(RequestMethod.GET, "libros");
   }
 
+  getLibro(idLibro: string): Observable<any> {
+    return this.request(RequestMethod.GET, `libros/${idLibro}`);
+  }
+
+  updateLibro(idLibro: string, libroBody: any): Observable<any> {
+    return this.request(RequestMethod.PUT, `actualizarLibro/${idLibro}`, libroBody);
+  }
+
+  deleteLibro(idLibro: string): Observable<any> {
+    return this.request(RequestMethod.DELETE, `eliminarLibro/${idLibro}`);
+  }
+
+  getUsuarios(): Observable<any> {
+    return this.request(RequestMethod.GET, "usuarios");
+  }
+
+  deleteUsuario(idUsuario: string): Observable<any> {
+    return this.request(RequestMethod.DELETE, "eliminarUsuario");
+  }
+
+  getUsuario(idUsuario: string): Observable<any> {
+    return this.request(RequestMethod.GET, `usuarios/${idUsuario}`);
+  }
+
+  updateUsuario(idUsuario: string, usuario: any): Observable<any> {
+    return this.request(RequestMethod.PUT, `editarUsuario/${idUsuario}`, usuario);
+  }
 }

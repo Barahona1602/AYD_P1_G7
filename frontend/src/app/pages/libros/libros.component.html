@@ -7,14 +7,14 @@
     </div>
     <div class="col-md-2">
       <div class="d-grid gap-2">
-        <button class="btn btn-outline-primary">Nuevo Libro</button>
+        <button class="btn btn-outline-primary" (click)="navegarACrearLibro()" *ngIf="authService.user['id_usuario'] === 1">Nuevo Libro</button>
       </div>
     </div>
   </div>
   <hr>
   <div class="row">
-    <div class="col-lg-2"></div>
-    <div class="col-lg-8">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-10">
       <table class="table">
         <thead class="table-dark">
           <tr>
@@ -36,12 +36,17 @@
             <td>
               Disponible
             </td>
+            <td>
+              Acción
+            </td>
           </tr>
         </thead>
         <tbody *ngIf="!loading">
           <tr *ngFor="let libro of libros">
             <td>
-              {{ libro.titulo }}
+              <a [routerLink]="['', 'libros', libro.id_libro]">
+                {{ libro.titulo }}
+              </a>
             </td>
             <td>
               {{ libro.autor }}
@@ -56,15 +61,25 @@
               {{ libro.precio_renta | currency:'Q' }}
             </td>
             <td>
-              {{ libro.disponible ? "Disponible" : "No Disponible" }}
+              {{ libro.estado }}
+            </td>
+            <td *ngIf="authService.user['id_usuario'] === 1">
+              <button class="btn btn-outline-success" (click)="navegarAEditarLibro(libro.id_libro)">Editar</button>
+            </td>
+            <td *ngIf="authService.user['id_usuario'] !== 1">
+              <button class="btn btn-outline-warning" [disabled]="libro.estado === 'Ocupado'" (click)="rentarLibro(libro)">Alquilar</button>
+              <button class="btn btn-outline-success mx-2" [disabled]="libro.estado === 'Ocupado'" (click)="comprarLibro(libro.id_libro)">Comprar</button>
             </td>
           </tr>
         </tbody>
       </table>
-      <div class="alert alert-warning mt-3" *ngIf="error">
+      <div class="alert alert-warning mt-3" *ngIf="error && !loading">
         Error al obtener libros.
       </div>
+      <div class="alert alert-warning mt-3" *ngIf="!error && !loading && libros.length === 0">
+        No se encontraron libros en el sistema.
+      </div>
     </div>
-    <div class="col-lg-2"></div>
+    <div class="col-lg-1"></div>
   </div>
 </div>

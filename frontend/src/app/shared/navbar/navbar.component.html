@@ -15,8 +15,11 @@
         <li class="nav-item">
           <a class="nav-link" routerLinkActive="active" routerLink="biblioteca">Mi biblioteca</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="authService.user['id_usuario'] !== 1">
           <a class="nav-link" routerLinkActive="active" routerLink="perfil">Mi Perfil</a>
+        </li>
+        <li class="nav-item" *ngIf="authService.user['id_usuario'] === 1">
+          <a class="nav-link" routerLinkActive="active" routerLink="usuarios">Usuarios</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" (click)="cerrarSesion()">Cerrar Sesión</a>

@@ -13,11 +13,13 @@ import { RouterModule } from "@angular/router";
 import { HttpClientModule } from "@angular/common/http";
 import { CommonModule } from "@angular/common";
 import { PagesService } from "./pages.service";
+import { UsuariosComponent } from './usuarios/usuarios.component';
+import { NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
-  declarations: [HomeComponent, LibrosComponent, PerfilComponent, LibroComponent, BibliotecaComponent, LibroFormComponent, CrearLibroComponent, EditarLibroComponent],
+  declarations: [HomeComponent, LibrosComponent, PerfilComponent, LibroComponent, BibliotecaComponent, LibroFormComponent, CrearLibroComponent, EditarLibroComponent, UsuariosComponent],
   providers: [PagesService],
-  imports: [CommonModule, PagesRoutingModule, FormsModule, ReactiveFormsModule, RouterModule, HttpClientModule],
+  imports: [CommonModule, PagesRoutingModule, FormsModule, ReactiveFormsModule, RouterModule, HttpClientModule, NgbModalModule],
   exports: []
 })
 export class PagesModule { }
