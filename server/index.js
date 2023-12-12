@@ -8,7 +8,7 @@ app.use(express.json());
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: '12345',
     database: 'mylibrary',
     port: 3306
 });
@@ -589,6 +589,51 @@ app.get('/', (req, res) => {
   res.send('¡Hola, mundo!');
 });
 
+  app.get('/HistorialUsuario/:idUsuario', (req, res) => {
+    const idUsuario = req.params.idUsuario;
+  
+    // Consulta SQL para obtener el historial de ventas y rentas de un usuario con información del libro y tipo de operación
+    const historialQuery = `
+      SELECT 
+        u.nombre AS nombre_usuario,
+        'venta' AS tipo_operacion,
+        l.id_libro,
+        l.sinopsis,
+        l.precio_compra,
+        l.precio_renta,
+        v.fecha_venta AS fecha_operacion
+      FROM ventas v
+      JOIN libros l ON v.id_libro = l.id_libro
+      JOIN usuarios u ON v.id_usuario = u.id_usuario
+      WHERE v.id_usuario = ?
+      
+      UNION
+      
+      SELECT 
+        u.nombre AS nombre_usuario,
+        'renta' AS tipo_operacion,
+        l.id_libro,
+        l.sinopsis,
+        l.precio_compra,
+        l.precio_renta,
+        r.fecha_renta AS fecha_operacion
+      FROM rentas r
+      JOIN libros l ON r.id_libro = l.id_libro
+      JOIN usuarios u ON r.id_usuario = u.id_usuario
+      WHERE r.id_usuario = ?
+    `;
+  
+    // Ejecutar la consulta
+    connection.query(historialQuery, [idUsuario, idUsuario], (err, results) => {
+      if (err) {
+        console.error('Error al obtener el historial del usuario:', err);
+        res.status(500).json({ mensaje: 'Error al obtener el historial del usuario' });
+      } else {
+        res.json(results);
+      }
+    });
+  });
+  
 
 
 // Iniciar el servidor
