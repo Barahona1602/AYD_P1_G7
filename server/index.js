@@ -236,81 +236,90 @@ app.delete('/eliminarUsuario/:idUsuario', (req, res) => {
 });
 
 
-  app.post('/venderLibro', (req, res) => {
-    const { id_usuario, id_libro } = req.body;
-  
-    // Validar que los valores requeridos estén presentes
-    if (!id_usuario || !id_libro) {
-      return res.status(400).json({ mensaje: 'Faltan datos requeridos para vender el libro' });
-    }
-  
-    // Validar que el usuario y el libro existan en las respectivas tablas
-    const validarUsuario = 'SELECT * FROM USUARIOS WHERE id_usuario = ?';
-    const validarLibro = 'SELECT * FROM LIBROS WHERE id_libro = ?';
-  
-    connection.query(validarUsuario, [id_usuario], (errUsuario, resultsUsuario) => {
-      if (errUsuario || resultsUsuario.length === 0) {
-        return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-      }
-  
-      connection.query(validarLibro, [id_libro], (errLibro, resultsLibro) => {
-        if (errLibro || resultsLibro.length === 0) {
-          return res.status(404).json({ mensaje: 'Libro no encontrado' });
-        }
-  
-        // Realizar la venta del libro
-        const insertarVenta = 'INSERT INTO VENTAS (id_usuario, id_libro) VALUES (?, ?)';
-        connection.query(insertarVenta, [id_usuario, id_libro], (errVenta, resultsVenta) => {
-          if (errVenta) {
-            console.error('Error al registrar la venta en la base de datos:', errVenta);
-            res.status(500).json({ mensaje: 'Error al registrar la venta' });
-          } else {
-            console.log('Venta registrada con éxito');
-            res.json({ mensaje: 'Libro vendido con éxito', id_usuario, id_libro });
-          }
-        });
-      });
-    });
-  });
-  
+app.post('/venderLibro', (req, res) => {
+  const { id_usuario, id_libro } = req.body;
 
-  app.post('/rentarLibro', (req, res) => {
-    const { id_usuario, id_libro, fecha_devolucion } = req.body;
-  
-    // Validar que los valores requeridos estén presentes
-    if (!id_usuario || !id_libro || !fecha_devolucion) {
-      return res.status(400).json({ mensaje: 'Faltan datos requeridos para rentar el libro' });
-    }
-  
-    // Validar que el usuario y el libro existan en las respectivas tablas
-    const validarUsuario = 'SELECT * FROM USUARIOS WHERE id_usuario = ?';
-    const validarLibro = 'SELECT * FROM LIBROS WHERE id_libro = ?';
-  
-    connection.query(validarUsuario, [id_usuario], (errUsuario, resultsUsuario) => {
+  // Validar que los valores requeridos estén presentes
+  if (!id_usuario || !id_libro) {
+      return res.status(400).json({ mensaje: 'Faltan datos requeridos para vender el libro' });
+  }
+
+  // Validar que el usuario y el libro existan en las respectivas tablas
+  const validarUsuario = 'SELECT * FROM USUARIOS WHERE id_usuario = ?';
+  const validarLibro = 'SELECT * FROM LIBROS WHERE id_libro = ? AND estado = "Disponible"';
+
+  connection.query(validarUsuario, [id_usuario], (errUsuario, resultsUsuario) => {
       if (errUsuario || resultsUsuario.length === 0) {
-        return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+          return res.status(404).json({ mensaje: 'Usuario no encontrado' });
       }
-  
+
       connection.query(validarLibro, [id_libro], (errLibro, resultsLibro) => {
-        if (errLibro || resultsLibro.length === 0) {
-          return res.status(404).json({ mensaje: 'Libro no encontrado' });
-        }
-  
-        // Realizar la renta del libro
-        const insertarRenta = 'INSERT INTO RENTAS (id_usuario, id_libro, fecha_devolucion) VALUES (?, ?, ?)';
-        connection.query(insertarRenta, [id_usuario, id_libro, fecha_devolucion], (errRenta, resultsRenta) => {
-          if (errRenta) {
-            console.error('Error al registrar la renta en la base de datos:', errRenta);
-            res.status(500).json({ mensaje: 'Error al registrar la renta' });
-          } else {
-            console.log('Renta registrada con éxito');
-            res.json({ mensaje: 'Libro rentado con éxito', id_usuario, id_libro, fecha_devolucion });
+          if (errLibro || resultsLibro.length === 0) {
+              return res.status(404).json({ mensaje: 'Libro no encontrado o no disponible' });
           }
-        });
+
+          // Realizar la venta del libro
+          const insertarVenta = 'INSERT INTO VENTAS (id_usuario, id_libro) VALUES (?, ?)';
+          connection.query(insertarVenta, [id_usuario, id_libro], (errVenta, resultsVenta) => {
+              if (errVenta) {
+                  console.error('Error al registrar la venta en la base de datos:', errVenta);
+                  res.status(500).json({ mensaje: 'Error al registrar la venta' });
+              } else {
+                  console.log('Venta registrada con éxito');
+                  res.json({ mensaje: 'Libro vendido con éxito', id_usuario, id_libro });
+              }
+          });
       });
-    });
   });
-  
+});
+
+
+app.post('/rentarLibro', (req, res) => {
+  const { id_usuario, id_libro, fecha_devolucion } = req.body;
+
+  // Validar que los valores requeridos estén presentes
+  if (!id_usuario || !id_libro || !fecha_devolucion) {
+      return res.status(400).json({ mensaje: 'Faltan datos requeridos para rentar el libro' });
+  }
+
+  // Validar que el usuario y el libro existan en las respectivas tablas
+  const validarUsuario = 'SELECT * FROM USUARIOS WHERE id_usuario = ?';
+  const validarLibro = 'SELECT * FROM LIBROS WHERE id_libro = ? AND estado = "Disponible"';
+
+  connection.query(validarUsuario, [id_usuario], (errUsuario, resultsUsuario) => {
+      if (errUsuario || resultsUsuario.length === 0) {
+          return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+      }
+
+      connection.query(validarLibro, [id_libro], (errLibro, resultsLibro) => {
+          if (errLibro || resultsLibro.length === 0) {
+              return res.status(404).json({ mensaje: 'Libro no encontrado o no disponible' });
+          }
+
+          // Realizar la renta del libro
+          const insertarRenta = 'INSERT INTO RENTAS (id_usuario, id_libro, fecha_devolucion) VALUES (?, ?, ?)';
+          connection.query(insertarRenta, [id_usuario, id_libro, fecha_devolucion], (errRenta, resultsRenta) => {
+              if (errRenta) {
+                  console.error('Error al registrar la renta en la base de datos:', errRenta);
+                  res.status(500).json({ mensaje: 'Error al registrar la renta' });
+              } else {
+                  // Actualizar el estado del libro a "Ocupado"
+                  const actualizarEstadoLibro = 'UPDATE LIBROS SET estado = "Ocupado" WHERE id_libro = ?';
+                  connection.query(actualizarEstadoLibro, [id_libro], (errEstadoLibro) => {
+                      if (errEstadoLibro) {
+                          console.error('Error al actualizar el estado del libro a rentado:', errEstadoLibro);
+                          res.status(500).json({ mensaje: 'Error al rentar el libro' });
+                      } else {
+                          console.log('Renta registrada con éxito');
+                          res.json({ mensaje: 'Libro rentado con éxito', id_usuario, id_libro, fecha_devolucion });
+                      }
+                  });
+              }
+          });
+      });
+  });
+});
+
 
   // Endpoint para comentar un libro
 app.post('/comentarLibro/:idUsuario/:idLibro', (req, res) => {
@@ -351,6 +360,26 @@ app.post('/comentarLibro/:idUsuario/:idLibro', (req, res) => {
       });
   });
 });
+
+
+app.post('/devolverLibro/:idLibro', (req, res) => {
+  const idLibro = req.params.idLibro;
+
+  // Query SQL para actualizar el estado del libro a disponible
+  const updateLibroSql = 'UPDATE libros SET estado = "disponible" WHERE id_libro = ?';
+
+  // Ejecutar la consulta para actualizar el estado del libro
+  connection.query(updateLibroSql, [idLibro], (err, results) => {
+      if (err) {
+          console.error('Error al actualizar el estado del libro en la base de datos:', err);
+          res.status(500).json({ mensaje: 'Error al devolver el libro' });
+      } else {
+          console.log('Libro devuelto con éxito');
+          res.json({ mensaje: 'Libro devuelto con éxito', idLibro });
+      }
+  });
+});
+
 
 
 // Endpoint para eliminar un comentario

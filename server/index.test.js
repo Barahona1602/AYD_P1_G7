@@ -173,7 +173,7 @@ describe('Ruta de login', () => {
     });
 
     expect(response.status).toBe(404);
-    expect(await response.text()).toBe('{\"mensaje\":\"Libro no encontrado\"}');
+    expect(await response.text()).toBe('{\"mensaje\":\"Libro no encontrado o no disponible\"}');
   });
 
   it('Debería devolver "Usuario no encontrado" si el libro no existe', async () => {
@@ -202,7 +202,7 @@ describe('Ruta de Rentar Libros', () => {
   });
 
   expect(response.status).toBe(404);
-  expect(await response.text()).toBe('{\"mensaje\":\"Libro no encontrado\"}');
+  expect(await response.text()).toBe('{\"mensaje\":\"Libro no encontrado o no disponible\"}');
 });
 
 it('Debería devolver "Faltan datos requeridos para rentar el libro" si el libro no existe', async () => {
@@ -219,36 +219,24 @@ expect(await response.text()).toBe('{\"mensaje\":\"Faltan datos requeridos para 
 });
 
 });
-/*
+
 describe('Ruta de Devolver Libros', () => {
   it('Debería devolver "Libro no encontrado" si el libro no existe', async () => {
-    const response = await fetch('http://localhost:3000/DevolverLibro', {
+    const response = await fetch('http://localhost:3000/devolverLibro/2', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
       },
-    body: JSON.stringify({ id_usuario: '1', id_libro: '6546465'}),
+
   });
 
-  expect(response.status).toBe(404);
-  expect(await response.text()).toBe('{\"mensaje\":\"Libro no encontrado\"}');
+  expect(response.status).toBe(200);
+  expect(await response.text()).toBe('{\"mensaje\":\"Libro devuelto con éxito\",\"idLibro\":\"2\"}');
 });
 
-it('Debería devolver "Faltan datos requeridos para devolver el libro" si el libro no existe', async () => {
-  const response = await fetch('http://localhost:3000/DevolverLibro', {
-  method: 'POST',
-  headers: {
-      'Content-Type': 'application/json',
-    },
-  body: JSON.stringify({ id_usuario: '8979787', id_libro: 'dasda'}),
-});
 
-expect(response.status).toBe(400);
-expect(await response.text()).toBe('{\"mensaje\":\"Faltan datos requeridos para devolver el libro\"}');
-});
-  
   });
-*/
+
 
 describe('Ruta de Agregar Libros', () => {
 
@@ -306,5 +294,21 @@ expect(await response.text()).toBe('{\"mensaje\":\"Faltan datos requeridos para 
   );
 
 
-
+describe('Ruta de Eliminar Usuario', () => {
+      
+    it('Debería devolver "Usuario eliminado con éxito" si el comentario se elimina correctamente', async () => {
+      const response = await fetch('http://localhost:3000/EliminarUsuario/1', {
+      method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+          },
+      });
+  
+      expect(response.status).toBe(500);
+      expect(await response.text()).toBe(
+        '{\"mensaje\":\"Error al eliminar el usuario\"}'
+      );
+    });
+  }
+  );
 
