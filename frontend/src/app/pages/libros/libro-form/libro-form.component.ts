@@ -81,7 +81,7 @@ export class LibroFormComponent implements OnInit {
     this.loading = true;
     this.libroForm = this.fb.group({
       titulo: [this.isNew ? null : this.libro.titulo, [Validators.required]],
-      sinopsis: [this.isNew ? null : this.libro.sinopsis, [Validators.required]],
+      sinopsis: [this.isNew ? this.lorem : this.libro.sinopsis, [Validators.required]],
       precioCompra: [this.isNew ? null : this.libro.precio_compra, [Validators.required]],
       precioRenta: [this.isNew ? null : this.libro.precio_renta, [Validators.required]],
       autor: [this.isNew ? null : this.libro.autor, [Validators.required]],

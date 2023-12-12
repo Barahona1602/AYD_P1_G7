@@ -376,17 +376,27 @@ app.post('/comentarLibro/:idUsuario/:idLibro', (req, res) => {
 app.post('/devolverLibro/:idLibro', (req, res) => {
   const idLibro = req.params.idLibro;
 
+  const { id_renta } = req.body;
+
   // Query SQL para actualizar el estado del libro a disponible
-  const updateLibroSql = 'UPDATE libros SET estado = "disponible" WHERE id_libro = ?';
+  const updateLibroSql = 'UPDATE LIBROS SET estado = "Disponible" WHERE id_libro = ?';
 
   // Ejecutar la consulta para actualizar el estado del libro
   connection.query(updateLibroSql, [idLibro], (err, results) => {
       if (err) {
           console.error('Error al actualizar el estado del libro en la base de datos:', err);
           res.status(500).json({ mensaje: 'Error al devolver el libro' });
-      } else {
-          console.log('Libro devuelto con éxito');
-          res.json({ mensaje: 'Libro devuelto con éxito', idLibro });
+        } else {
+          const updateRentaLibro = 'UPDATE RENTAS SET devuelto = 1 WHERE id_renta = ?';
+          connection.query(updateRentaLibro, [id_renta], (error, response) => {
+            if (error) {
+              console.error('Error al actualizar el estado de renta en la base de datos:', err);
+              res.status(500).json({ mensaje: 'Error al devolver el libro' });
+            }else {
+              console.log('Libro devuelto con éxito');
+              res.json({ mensaje: 'Libro devuelto con éxito', idLibro });
+            }
+          });
       }
   });
 });
@@ -561,7 +571,7 @@ app.get('/ventas/usuario/:idUsuario', (req, res) => {
 
   // Query SQL para obtener las ventas de un usuario específico
   const query = `
-      SELECT VENTAS.id_venta, LIBROS.titulo AS titulo_libro
+      SELECT LIBROS.*
       FROM VENTAS
       INNER JOIN LIBROS ON VENTAS.id_libro = LIBROS.id_libro
       WHERE VENTAS.id_usuario = ?`;
@@ -623,7 +633,7 @@ app.get('/rentas/usuario/:idUsuario', (req, res) => {
 
   // Query SQL para obtener las rentas de un usuario específico
   const query = `
-      SELECT RENTAS.id_renta, LIBROS.titulo AS titulo_libro, RENTAS.fecha_devolucion
+      SELECT *
       FROM RENTAS
       INNER JOIN LIBROS ON RENTAS.id_libro = LIBROS.id_libro
       WHERE RENTAS.id_usuario = ?`;

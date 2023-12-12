@@ -11,14 +11,14 @@ import { EditarLibroComponent } from './libros/editar-libro/editar-libro.compone
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { HttpClientModule } from "@angular/common/http";
-import { CommonModule } from "@angular/common";
+import { CommonModule, CurrencyPipe } from "@angular/common";
 import { PagesService } from "./pages.service";
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { NgbModalModule } from "@ng-bootstrap/ng-bootstrap";
 
 @NgModule({
   declarations: [HomeComponent, LibrosComponent, PerfilComponent, LibroComponent, BibliotecaComponent, LibroFormComponent, CrearLibroComponent, EditarLibroComponent, UsuariosComponent],
-  providers: [PagesService],
+  providers: [PagesService, CurrencyPipe],
   imports: [CommonModule, PagesRoutingModule, FormsModule, ReactiveFormsModule, RouterModule, HttpClientModule, NgbModalModule],
   exports: []
 })

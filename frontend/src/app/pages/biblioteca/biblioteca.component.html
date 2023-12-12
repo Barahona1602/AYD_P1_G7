@@ -19,7 +19,7 @@
     </div>
     <div class="row">
         <div class="col-lg-2"></div>
-        <div class="col-lg-8">
+        <div class="col-lg-8" *ngIf="!loading">
             <ng-container *ngIf="vistaActiva === 'COMPRAS'">
                 <table class="table mt-3">
                     <thead class="table-dark">
@@ -38,7 +38,28 @@
                             </th>
                         </tr>
                     </thead>
+                    <tbody>
+                        <tr *ngFor="let libro of librosComprados">
+                            <td>
+                                <a [routerLink]="['', 'libros', libro.id_libro]">
+                                    {{ libro.titulo.length > 25 ? (libro.titulo | slice: 0:22) + "..." : libro.titulo }}
+                                </a>
+                            </td>
+                            <td>
+                                {{libro.autor}}
+                            </td>
+                            <td>
+                                {{libro.editorial}}
+                            </td>
+                            <td>
+                                {{libro.precio_compra | currency: 'Q'}}
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
+                <div class="alert alert-info" *ngIf="librosComprados.length === 0">
+                    Aun no tienes libros rentados para poder ver.
+                </div>
             </ng-container>
             <ng-container *ngIf="vistaActiva === 'RENTAS'">
                 <table class="table mt-3">
@@ -56,9 +77,44 @@
                             <th>
                                 Valor de Renta
                             </th>
+                            <th>
+                                Fecha de Entrega
+                            </th>
+                            <th>
+                                Acción
+                            </th>
                         </tr>
                     </thead>
+                    <tbody>
+                        <!-- <tr *ngFor="let libro of librosRentados" [ngClass]="{'bg-danger': libro.atrasado}"> -->
+                        <tr *ngFor="let libro of librosRentados" [ngClass]="{'table-danger': libro.atrasado && libro.devuelto === 0}">
+                            <td>
+                                <a [routerLink]="['', 'libros', libro.id_libro]">
+                                    {{ libro.titulo.length > 25 ? (libro.titulo | slice: 0:22) + "..." : libro.titulo }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ libro.autor }}
+                            </td>
+                            <td>
+                                {{ libro.editorial }}
+                            </td>
+                            <td>
+                                {{ libro.precio_renta | currency: 'Q' }}
+                            </td>
+                            <td>
+                                {{ libro.fecha_devolucion | date }}
+                            </td>
+                            <td>
+                                <button class="btn btn-success" *ngIf="libro.devuelto === 0" (click)="retornarLibro(libro)">Retornar</button>
+                                <p *ngIf="libro.devuelto === 1">DEVUELTO</p>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
+                <div class="alert alert-info" *ngIf="librosRentados.length === 0">
+                    Aun no tienes libros rentados para poder ver.
+                </div>
             </ng-container>
         </div>
         <div class="col-lg-2"></div>
