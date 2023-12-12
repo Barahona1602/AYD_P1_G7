@@ -107,34 +107,33 @@ app.post('/registrarUsuario', (req, res) => {
     });
 });
 
+app.post('/agregarLibro', (req, res) => {
+  // Obtener datos del formulario para agregar libro
+  const { titulo, sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado } = req.body;
 
+  // Validar que los datos requeridos estén presentes
+  if (!titulo || !sinopsis || !precioCompra || !autor || !anoPublicacion || !editorial || !estado) {
+    return res.status(400).json({ mensaje: 'Faltan datos requeridos para agregar el libro' });
+  }
 
-  app.post('/agregarLibro', (req, res) => {
-    // Obtener datos del formulario para agregar libro
-    const { sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado } = req.body;
-  
-    // Validar que los datos requeridos estén presentes
-    if (!sinopsis || !precioCompra || !autor || !anoPublicacion || !editorial || !estado) {
-      return res.status(400).json({ mensaje: 'Faltan datos requeridos para agregar el libro' });
+  // Query SQL para insertar un nuevo libro con la columna "Titulo"
+  const sql = 'INSERT INTO LIBROS (Titulo, sinopsis, precio_compra, precio_renta, autor, año_publicacion, editorial, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+
+  // Parámetros para la consulta
+  const values = [titulo, sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado];
+
+  // Ejecutar la consulta
+  connection.query(sql, values, (err, results) => {
+    if (err) {
+      console.error('Error al agregar libro en la base de datos:', err);
+      res.status(500).json({ mensaje: 'Error al agregar libro' });
+    } else {
+      console.log('Libro agregado con éxito');
+      res.json({ mensaje: 'Libro agregado con éxito', libro: { titulo, sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado } });
     }
-  
-    // Query SQL para insertar un nuevo libro
-    const sql = 'INSERT INTO LIBROS (sinopsis, precio_compra, precio_renta, autor, año_publicacion, editorial, estado) VALUES (?, ?, ?, ?, ?, ?, ?)';
-  
-    // Parámetros para la consulta
-    const values = [sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado];
-  
-    // Ejecutar la consulta
-    connection.query(sql, values, (err, results) => {
-      if (err) {
-        console.error('Error al agregar libro en la base de datos:', err);
-        res.status(500).json({ mensaje: 'Error al agregar libro' });
-      } else {
-        console.log('Libro agregado con éxito');
-        res.json({ mensaje: 'Libro agregado con éxito', libro: { sinopsis, precioCompra, precioRenta, autor, anoPublicacion, editorial, estado } });
-      }
-    });
   });
+});
+
 
   
   app.put('/actualizarLibro/:idLibro', (req, res) => {
@@ -178,24 +177,31 @@ app.post('/registrarUsuario', (req, res) => {
   
   app.delete('/eliminarLibro/:idLibro', (req, res) => {
     const idLibro = req.params.idLibro;
-  
-    // Query SQL para eliminar un libro por su ID
-    const sql = 'DELETE FROM LIBROS WHERE id_libro = ?';
-  
-    // Parámetros para la consulta
-    const values = [idLibro];
-  
-    // Ejecutar la consulta
-    connection.query(sql, values, (err, results) => {
-      if (err) {
-        console.error('Error al eliminar libro en la base de datos:', err);
-        res.status(500).json({ mensaje: 'Error al eliminar libro' });
-      } else {
-        console.log('Libro eliminado con éxito');
-        res.json({ mensaje: 'Libro eliminado con éxito', idLibro });
-      }
+
+    // Query SQL para eliminar rentas relacionadas con el libro
+    const deleteRentasSql = 'DELETE FROM rentas WHERE id_libro = ?';
+
+    // Ejecutar la consulta para eliminar rentas
+    connection.query(deleteRentasSql, [idLibro], (err, rentasResults) => {
+        if (err) {
+            console.error('Error al eliminar rentas relacionadas:', err);
+            res.status(500).json({ mensaje: 'Error al eliminar libro' });
+        } else {
+            // Después de eliminar rentas, ahora puedes eliminar el libro
+            const deleteLibroSql = 'DELETE FROM libros WHERE id_libro = ?';
+            connection.query(deleteLibroSql, [idLibro], (err, libroResults) => {
+                if (err) {
+                    console.error('Error al eliminar libro en la base de datos:', err);
+                    res.status(500).json({ mensaje: 'Error al eliminar libro' });
+                } else {
+                    console.log('Libro eliminado con éxito');
+                    res.json({ mensaje: 'Libro eliminado con éxito', idLibro });
+                }
+            });
+        }
     });
-  });
+});
+
   
 
   // Endpoint para eliminar un usuario
