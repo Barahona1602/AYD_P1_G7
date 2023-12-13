@@ -604,7 +604,7 @@ app.get('/ventas/usuario/:idUsuario', (req, res) => {
 
   // Query SQL para obtener las ventas de un usuario específico
   const query = `
-      SELECT LIBROS.*
+      SELECT LIBROS.*, VENTAS.fecha_venta
       FROM VENTAS
       INNER JOIN LIBROS ON VENTAS.id_libro = LIBROS.id_libro
       WHERE VENTAS.id_usuario = ?`;
