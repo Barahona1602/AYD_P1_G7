@@ -666,7 +666,7 @@ app.get('/', (req, res) => {
   res.send('¡Hola, mundo!');
 });
 
-  app.get('/HistorialUsuario/:idUsuario', (req, res) => {
+  app.get('/historialUsuario/:idUsuario', (req, res) => {
     const idUsuario = req.params.idUsuario;
   
     // Consulta SQL para obtener el historial de ventas y rentas de un usuario con información del libro y tipo de operación
