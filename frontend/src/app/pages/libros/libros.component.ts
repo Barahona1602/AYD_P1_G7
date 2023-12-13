@@ -34,7 +34,11 @@ export class LibrosComponent implements OnInit {
     this.loading = true;
     this.pagesService.getLibros().subscribe(resp => {
       console.log(resp);
-      this.libros = resp.libros.filter(libro => libro.estado !== "Vendido");
+      if (this.authService.user['id_usuario'] !== "admin") {
+        this.libros = resp.libros.filter(libro => libro.estado !== "Vendido");
+      } else {
+        this.libros = resp.libros;
+      }
       this.loading = false;
       this.error = false;
     }, err => {
