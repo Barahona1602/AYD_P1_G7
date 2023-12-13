@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
@@ -7,5 +8,21 @@ import { AuthService } from 'src/app/auth/auth.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    private router: Router) {}
+
+
+  verLibros(): void {
+    this.router.navigate(["libros"]);
+  }
+  verBiblioteca(): void {
+    this.router.navigate(["biblioteca"]);
+  }
+  verPerfil(): void {
+    this.router.navigate(["perfil"]);
+  }
+  verUsuarios(): void {
+    this.router.navigate(["usuarios"]);
+  }
 }
