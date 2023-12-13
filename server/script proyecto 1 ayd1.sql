@@ -7,24 +7,24 @@ USE mylibrary;
 -- Crear la tabla USUARIOS
 CREATE TABLE IF NOT EXISTS USUARIOS (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(30),
-    apellido VARCHAR(30),
+    nombre VARCHAR(250),
+    apellido VARCHAR(250),
     numero_tel VARCHAR(8),
-    correo VARCHAR(40),
-    password VARCHAR(30),
+    correo VARCHAR(250),
+    password VARCHAR(250),
     fecha_nac DATE
 );
 
 -- Crear la tabla LIBROS
 CREATE TABLE IF NOT EXISTS LIBROS (
     id_libro INT AUTO_INCREMENT PRIMARY KEY,
-    titulo VARCHAR(20),
+    titulo VARCHAR(250),
     sinopsis TEXT,
     precio_compra DECIMAL(10, 2),
     precio_renta DECIMAL(10, 2),
-    autor VARCHAR(30),
+    autor VARCHAR(250),
     año_publicacion INT,
-    editorial VARCHAR(40),
+    editorial VARCHAR(250),
     estado ENUM('Ocupado', 'Disponible', 'Vendido')
 );
 
