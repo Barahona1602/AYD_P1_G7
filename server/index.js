@@ -712,14 +712,14 @@ app.get('/', (req, res) => {
 
   app.get('/historialUsuario/:idUsuario', (req, res) => {
     const idUsuario = req.params.idUsuario;
-  
+
     // Consulta SQL para obtener el historial de ventas y rentas de un usuario con información del libro y tipo de operación
     const historialQuery = `
       SELECT 
         u.nombre AS nombre_usuario,
         'venta' AS tipo_operacion,
-        l.id_libro,
-        l.sinopsis,
+        l.titulo,
+        l.autor,
         l.precio_compra,
         l.precio_renta,
         v.fecha_venta AS fecha_operacion
@@ -733,8 +733,8 @@ app.get('/', (req, res) => {
       SELECT 
         u.nombre AS nombre_usuario,
         'renta' AS tipo_operacion,
-        l.id_libro,
-        l.sinopsis,
+        l.titulo,
+        l.autor,
         l.precio_compra,
         l.precio_renta,
         r.fecha_renta AS fecha_operacion
