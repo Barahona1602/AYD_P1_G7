@@ -199,7 +199,7 @@ expect(await response.text()).toBe('{\"mensaje\":\"Faltan datos requeridos para 
 
 describe('Ruta de Eliminar Libros', () => {
     
-    it('Debería devolver "Libro eliminado con éxito" si el comentario se elimina correctamente', async () => {
+    it('Debería devolver "Error al eliminar libro" si el libro se elimina', async () => {
       const response = await fetch('http://localhost:3000/eliminarLibro/dasd', {
       method: 'DELETE',
         headers: {
