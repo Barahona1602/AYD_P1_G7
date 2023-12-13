@@ -207,3 +207,16 @@
 || 2. Visualiza una lista de sus compras y rentas anteriores. |
 | **Flujo alterno:** | |
 || - Si el historial está vacío, se muestra un mensaje indicando que no hay registros. |
+
+
+**Tablero Kanban:**
+
+![Tablero 1](https://github.com/Barahona1602/AYD_P1_G7/blob/feature202110773/dataBase/server/Tablero%201.jpg)
+
+![Tablero 2](https://github.com/Barahona1602/AYD_P1_G7/blob/feature202110773/dataBase/server/Tablero%202.jpg)
+
+![Tablero 3](https://github.com/Barahona1602/AYD_P1_G7/blob/feature202110773/dataBase/server/Tablero%203.jpg)
+
+![Tablero 4](https://github.com/Barahona1602/AYD_P1_G7/blob/feature202110773/dataBase/server/Tablero%204.jpg)
+
+![Tablero 5](https://github.com/Barahona1602/AYD_P1_G7/blob/feature202110773/dataBase/server/Tablero%205.jpg)
