@@ -1,6 +1,8 @@
 **Modelo Entidad-Relación:**
 ![Entidad-Relación](https://github.com/Barahona1602/AYD_P1_G7/blob/feature202110773/dataBase/server/Relational%20AyD1.png)
 
+**Diagrama de Casos de Uso**
+![Diagrama de Casos de Uso](https://github.com/Barahona1602/AYD_P1_G7/blob/feature202110773/dataBase/server/Diagrama%20de%20Casos%20de%20Uso.png)
 
 **Casos de Uso de Alto Nivel:**
 
