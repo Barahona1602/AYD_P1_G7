@@ -1,21 +1,25 @@
 **Modelo Entidad-Relación:**
+
+
 ![Entidad-Relación](https://github.com/Barahona1602/AYD_P1_G7/blob/feature202110773/dataBase/server/Relational%20AyD1.png)
 
 **Diagrama de Casos de Uso**
+
+
 ![Diagrama de Casos de Uso](https://github.com/Barahona1602/AYD_P1_G7/blob/feature202110773/dataBase/server/Diagrama%20de%20Casos%20de%20Uso.png)
 
 **Casos de Uso de Alto Nivel:**
 
 | **Registro de Usuario** | |
 | --- | --- |
-| Tipo | Primario |
+| Tipo | Secundario |
 | Roles | Usuarios |
 | Descripción | Permite a los usuarios registrarse en la plataforma proporcionando información personal necesaria. |
 
 | **Inicio de Sesión** | |
 | --- | --- |
 | Tipo | Primario |
-| Roles | Usuarios |
+| Roles | Usuarios/Administrador |
 | Descripción | Permite a los usuarios autenticarse en la plataforma usando su correo electrónico y contraseña. |
 
 | **Ingreso de Libros** | |
@@ -26,13 +30,13 @@
 
 | **Actualizar Libros** | |
 | --- | --- |
-| Tipo | Primario |
+| Tipo | Secundario |
 | Roles | Administrador |
 | Descripción | Permite al administrador modificar cualquier atributo de un libro existente en la biblioteca. |
 
 | **Eliminar Libros** | |
 | --- | --- |
-| Tipo | Primario |
+| Tipo | Secundario |
 | Roles | Administrador |
 | Descripción | Permite al administrador eliminar libros de la biblioteca virtual que ya no cumplen con los estándares o no se venden. |
 
@@ -56,7 +60,7 @@
 
 | **Comentar Libros** | |
 | --- | --- |
-| Tipo | Primario |
+| Tipo | Secundario |
 | Roles | Usuarios |
 | Descripción | Permite a los usuarios dejar comentarios sobre los libros en la biblioteca, con opción para eliminar sus propios comentarios. |
 
@@ -68,7 +72,7 @@
 
 | **Historial de Compras y Rentas** | |
 | --- | --- |
-| Tipo | Primario |
+| Tipo | Secundario |
 | Roles | Usuarios |
 | Descripción | Permite a los usuarios ver su historial de compras y alquileres de libros realizados a lo largo del tiempo. |
 
@@ -76,7 +80,7 @@
 
 | **Registro de Usuario** | |
 | --- | --- |
-| Tipo | Primario |
+| Tipo | Secundario |
 | Roles | Usuarios |
 | Descripción | Permite a los usuarios registrarse en la plataforma proporcionando información personal necesaria. |
 | **Flujo:** | |
@@ -115,7 +119,7 @@
 
 | **Actualizar Libros** | |
 | --- | --- |
-| Tipo | Primario |
+| Tipo | Secundario |
 | Roles | Administrador |
 | Descripción | Permite al administrador modificar cualquier atributo de un libro existente en la biblioteca. |
 | **Flujo:** | |
@@ -128,7 +132,7 @@
 
 | **Eliminar Libros** | |
 | --- | --- |
-| Tipo | Primario |
+| Tipo | Secundario |
 | Roles | Administrador |
 | Descripción | Permite al administrador eliminar libros de la biblioteca virtual que ya no cumplen con los estándares o no se venden. |
 | **Flujo:** | |
@@ -176,7 +180,7 @@
 
 | **Comentar Libros** | |
 | --- | --- |
-| Tipo | Primario |
+| Tipo | Secundario |
 | Roles | Usuarios |
 | Descripción | Permite a los usuarios dejar comentarios sobre los libros en la biblioteca, con opción para eliminar sus propios 
 | **Flujo:** | |
@@ -201,7 +205,7 @@
 
 | **Historial de Compras y Rentas** | |
 | --- | --- |
-| Tipo | Primario |
+| Tipo | Secundario |
 | Roles | Usuarios |
 | Descripción | Permite a los usuarios ver su historial de compras y alquileres de libros realizados a lo largo del tiempo. |
 | **Flujo:** | |
