@@ -51,7 +51,7 @@
                             {{ usuario.fecha_nac | date }}
                         </td>
                         <td>
-                            <button class="btn btn-danger">Eliminar</button>
+                            <button class="btn btn-danger" *ngIf="usuario.id_usuario !== authService.user['id_usuario']" (click)="eliminarUsuario(usuario.id_usuario)">Eliminar</button>
                         </td>
                     </tr>
                 </tbody>

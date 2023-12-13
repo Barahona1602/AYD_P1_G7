@@ -180,25 +180,33 @@ app.post('/agregarLibro', (req, res) => {
     const idLibro = req.params.idLibro;
 
     // Query SQL para eliminar rentas relacionadas con el libro
-    const deleteRentasSql = 'DELETE FROM rentas WHERE id_libro = ?';
+    const deleteRentasSql = 'DELETE FROM RENTAS WHERE id_libro = ?';
 
     // Ejecutar la consulta para eliminar rentas
     connection.query(deleteRentasSql, [idLibro], (err, rentasResults) => {
-        if (err) {
-            console.error('Error al eliminar rentas relacionadas:', err);
-            res.status(500).json({ mensaje: 'Error al eliminar libro' });
+      if (err) {
+          console.error('Error al eliminar rentas relacionadas:', err);
+          res.status(500).json({ mensaje: 'Error al eliminar libro' });
         } else {
+          const deleteVentasSql = 'DELETE FROM VENTAS WHERE id_libro = ?';
+          connection.query(deleteVentasSql, [idLibro], (err, ventasResults) => {
+          if (err) {
+            console.error('Error al eliminar rentas relacionadas:', err);
+            res.status(500).json({ mensaje: 'Error al eliminar libro' });  
+          } else {
             // Después de eliminar rentas, ahora puedes eliminar el libro
-            const deleteLibroSql = 'DELETE FROM libros WHERE id_libro = ?';
+            const deleteLibroSql = 'DELETE FROM LIBROS WHERE id_libro = ?';
             connection.query(deleteLibroSql, [idLibro], (err, libroResults) => {
-                if (err) {
-                    console.error('Error al eliminar libro en la base de datos:', err);
-                    res.status(500).json({ mensaje: 'Error al eliminar libro' });
-                } else {
-                    console.log('Libro eliminado con éxito');
-                    res.json({ mensaje: 'Libro eliminado con éxito', idLibro });
-                }
+            if (err) {
+                console.error('Error al eliminar libro en la base de datos:', err);
+                res.status(500).json({ mensaje: 'Error al eliminar libro' });
+            } else {
+                console.log('Libro eliminado con éxito');
+                res.json({ mensaje: 'Libro eliminado con éxito', idLibro });
+            }
             });
+          }
+        });
         }
     });
 });
@@ -222,15 +230,40 @@ app.delete('/eliminarUsuario/:idUsuario', (req, res) => {
       return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     }
 
-    // Realizar la eliminación del usuario
-    const eliminarUsuario = 'DELETE FROM USUARIOS WHERE id_usuario = ?';
-    connection.query(eliminarUsuario, [idUsuario], (errEliminar, resultsEliminar) => {
-      if (errEliminar) {
-        console.error('Error al eliminar el usuario en la base de datos:', errEliminar);
+    const deleteComentariosSql = "DELETE FROM COMENTARIOS WHERE id_usuario = ?";
+    
+    connection.query(deleteComentariosSql, [idUsuario], (err, ventasResult) => {
+      if (err) {
+        console.error('Error al eliminar comentarios del usuario en la base de datos:', errEliminar);
         res.status(500).json({ mensaje: 'Error al eliminar el usuario' });
       } else {
-        console.log('Usuario eliminado con éxito');
-        res.json({ mensaje: 'Usuario eliminado con éxito', id_usuario: idUsuario });
+        const deleteRentasSql = "DELETE FROM RENTAS WHERE id_usuario = ?";
+        connection.query(deleteRentasSql, [idUsuario], (err, rentasResult) => {
+          if (err) {
+            console.error('Error al eliminar rentas del usuario en la base de datos:', errEliminar);
+            res.status(500).json({ mensaje: 'Error al eliminar el usuario' });
+          } else {
+            const deleteVentasSql = "DELETE FROM VENTAS WHERE id_usuario = ?";
+            connection.query(deleteVentasSql, [idUsuario], (err, comentariosResult) => {
+              if (err) {
+                console.error('Error al eliminar ventas del usuario en la base de datos:', errEliminar);
+                res.status(500).json({ mensaje: 'Error al eliminar el usuario' });
+              } else {
+                // Realizar la eliminación del usuario
+                const eliminarUsuario = 'DELETE FROM USUARIOS WHERE id_usuario = ?';
+                connection.query(eliminarUsuario, [idUsuario], (errEliminar, resultsEliminar) => {
+                  if (errEliminar) {
+                    console.error('Error al eliminar el usuario en la base de datos:', errEliminar);
+                    res.status(500).json({ mensaje: 'Error al eliminar el usuario' });
+                  } else {
+                    console.log('Usuario eliminado con éxito');
+                    res.json({ mensaje: 'Usuario eliminado con éxito', id_usuario: idUsuario });
+                  }
+                });
+              }
+            });
+          }
+        })
       }
     });
   });
@@ -531,7 +564,7 @@ app.get('/libros/:idLibro/comentarios', (req, res) => {
   const libroId = req.params.idLibro; 
 
   const query = `
-      SELECT COMENTARIOS.id_comentario, COMENTARIOS.comentario, USUARIOS.nombre AS nombre_usuario
+      SELECT COMENTARIOS.id_comentario, COMENTARIOS.comentario, USUARIOS.nombre AS nombre_usuario, USUARIOS.apellido AS apellido_usuario, USUARIOS.id_usuario
       FROM COMENTARIOS
       INNER JOIN USUARIOS ON COMENTARIOS.id_usuario = USUARIOS.id_usuario
       WHERE COMENTARIOS.id_libro = ?`;
