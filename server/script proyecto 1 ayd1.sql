@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS RENTAS (
     devuelto BOOLEAN DEFAULT false,
     fecha_renta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fecha_devolucion DATE,
-    FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario),
-    FOREIGN KEY (id_libro) REFERENCES LIBROS(id_libro)
+    FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_libro) REFERENCES LIBROS(id_libro) ON DELETE CASCADE
    
 );
 
@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS VENTAS (
     id_usuario INT,
     id_libro INT,
     fecha_venta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario),
-    FOREIGN KEY (id_libro) REFERENCES LIBROS(id_libro)
+    FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_libro) REFERENCES LIBROS(id_libro) ON DELETE CASCADE
  
 );
 
