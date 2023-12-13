@@ -7,7 +7,7 @@
     </div>
     <div class="col-md-2">
       <div class="d-grid gap-2">
-        <button class="btn btn-outline-primary" (click)="navegarACrearLibro()" *ngIf="authService.user['id_usuario'] === 1">Nuevo Libro</button>
+        <button class="btn btn-outline-primary" (click)="navegarACrearLibro()" *ngIf="authService.user['id_usuario'] === 'admin'">Nuevo Libro</button>
       </div>
     </div>
   </div>
@@ -69,10 +69,10 @@
             <td>
               {{ libro.estado }}
             </td>
-            <td *ngIf="authService.user['id_usuario'] === 1">
+            <td *ngIf="authService.user['id_usuario'] === 'admin'">
               <button class="btn btn-outline-success" (click)="navegarAEditarLibro(libro.id_libro)">Editar</button>
             </td>
-            <td *ngIf="authService.user['id_usuario'] !== 1">
+            <td *ngIf="authService.user['id_usuario'] !== 'admin'">
               <button class="btn btn-outline-warning" [disabled]="libro.estado === 'Ocupado'" (click)="rentarLibro(libro)">Alquilar</button>
               <button class="btn btn-outline-success mx-2" [disabled]="libro.estado === 'Ocupado'" (click)="comprarLibro(libro)">Comprar</button>
             </td>

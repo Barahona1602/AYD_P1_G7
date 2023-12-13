@@ -10,7 +10,7 @@ import { EditarLibroComponent } from "./libros/editar-libro/editar-libro.compone
 import { UsuariosComponent } from "./usuarios/usuarios.component";
 
 const routes: Routes = [
-  { path: "", component: HomeComponent },
+  { path: "home", component: HomeComponent },
   { path: "libros", component: LibrosComponent },
   { path: "libros/nuevo", component: CrearLibroComponent },
   { path: "libros/editar/:idLibro", component: EditarLibroComponent },
@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: "biblioteca", component: BibliotecaComponent },
   { path: "usuarios", component: UsuariosComponent },
   { path: "perfil", component: PerfilComponent },
-  { path: "**", redirectTo: "" }
+  { path: "**", redirectTo: "auth/login" }
 ];
 
 @NgModule({
