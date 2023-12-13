@@ -67,7 +67,7 @@ export class PagesService {
   }
 
   deleteUsuario(idUsuario: string): Observable<any> {
-    return this.request(RequestMethod.DELETE, "eliminarUsuario");
+    return this.request(RequestMethod.DELETE, `eliminarUsuario/${idUsuario}`);
   }
 
   getUsuario(idUsuario: string): Observable<any> {
@@ -96,5 +96,17 @@ export class PagesService {
 
   devolverLibro(libroId: string, body: any): Observable<any> {
     return this.request(RequestMethod.POST, `devolverLibro/${libroId}`, body);
+  }
+
+  getComentarios(idLibro: string): Observable<any> {
+    return this.request(RequestMethod.GET, `libros/${idLibro}/comentarios`);
+  }
+
+  publicarComentario(idUsuario: string, idLibro: string, comentarioBody: any): Observable<any> {
+    return this.request(RequestMethod.POST, `comentarLibro/${idUsuario}/${idLibro}`, comentarioBody);
+  }
+
+  eliminarComentario(idUsuario: number, idLibro: number, idComentario: number): Observable<any> {
+    return this.request(RequestMethod.DELETE, `eliminarComentario/${idUsuario}/${idLibro}/${idComentario}`);
   }
 }

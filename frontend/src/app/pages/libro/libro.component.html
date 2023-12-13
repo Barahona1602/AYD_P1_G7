@@ -1,1 +1,114 @@
-<p>libro works!</p>
+<div class="container mt-5">
+    <div class="row" *ngIf="!loading">
+        <div class="col-md-11">
+            <h1>
+                {{ libro.titulo }}
+                <small>({{libro["año_publicacion"]}})</small>
+            </h1>
+        </div>
+        <div class="col-lg-1">
+            <div class="d-grid gap-2">
+                <button class="btn btn-secondary" (click)="location.back()">Regresar</button>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row" *ngIf="!loading">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-4">
+            <div class="row">
+                <div class="col-lg-3">
+                    <dt class="form-label">Titulo</dt>
+                </div>
+                <div class="col-lg">
+                    <p>{{libro.titulo}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <dt class="form-label">Autor</dt>
+                </div>
+                <div class="col-lg">
+                    <p>{{libro.autor}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <dt class="form-label">Editorial</dt>
+                </div>
+                <div class="col-lg">
+                    <p>{{libro.editorial}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <dt class="form-label">Año de Publicación</dt>
+                </div>
+                <div class="col-lg">
+                    <p>{{libro["año_publicacion"]}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <dt class="form-label">Precio de Compra</dt>
+                </div>
+                <div class="col-lg">
+                    <p>{{libro.precio_compra | currency: 'Q'}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <dt class="form-label">Precio de Renta</dt>
+                </div>
+                <div class="col-lg">
+                    <p>{{libro.precio_renta | currency: 'Q'}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <p class="lead">{{libro.sinopsis}}</p>
+        </div>
+    </div>
+    <!-- COMENTARIOS -->
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between">
+                <h3>Comentarios</h3>
+                <button class="btn btn-primary" *ngIf="!showComentarioInput" (click)="showComentarioInput = true">Comentar</button>
+            </div>
+            <ng-container *ngIf="showComentarioInput">
+                <div class="row">
+                    <div class="col">
+                        <textarea class="form-control" placeholder="Escribe tu comentario del libro." rows="5" cols="30" [(ngModel)]="nuevoComentario"></textarea>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-2" style="width: 100%;">
+                    <button class="btn btn-secondary mx-3" (click)="showComentarioInput = false">Cancelar</button>
+                    <button class="btn btn-primary" (click)="publicarComentario()">Publicar</button>
+                </div>
+            </ng-container>
+            <div class="card mt-3" *ngFor="let comentario of comentarios">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-lg-10">
+                            {{comentario.nombre_usuario}} {{comentario.apellido_usuario}}
+                        </div>
+                        <div class="col-lg" *ngIf="comentario.id_usuario === authService.user['id_usuario']">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-danger" (click)="eliminarComentario(comentario.id_comentario)">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p><em>{{comentario.comentario}}</em></p>
+                </div>
+            </div>
+            <div class="alert alert-info mt-3" *ngIf="comentarios.length === 0">
+                Aun no hay comentarios publicados para este libro.
+            </div>
+        </div>
+        <div class="col-lg-2"></div>
+    </div>
+</div>

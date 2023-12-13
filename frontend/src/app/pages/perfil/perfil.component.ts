@@ -17,6 +17,9 @@ export class PerfilComponent implements OnInit {
 
   alertMessage: string = "";
 
+
+  passwordRegex = /^(?=.*[A-Z])(?=.*[\W])(?=.*[0-9])(?=.*[a-z]).{8,128}$/;
+
   usuario: any;
   usuarioForm: FormGroup;
   
@@ -28,6 +31,25 @@ export class PerfilComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUsuario();
+  }
+
+  get notValidNombre(): boolean {
+    return this.usuarioForm.get("nombre").invalid;
+  }
+  get notValidApellido(): boolean {
+    return this.usuarioForm.get("apellido").invalid;
+  }
+  get notValidCorreo(): boolean {
+    return this.usuarioForm.get("correo").invalid;
+  }
+  get notValidFechaNacimiento(): boolean {
+    return this.usuarioForm.get("fechaNacimiento").invalid;
+  }
+  get notValidTelefono(): boolean {
+    return this.usuarioForm.get("telefono").invalid;
+  }
+  get notValidPassword(): boolean {
+    return this.usuarioForm.get("password").invalid;
   }
 
   getUsuario(): void {
@@ -48,7 +70,7 @@ export class PerfilComponent implements OnInit {
       correo: [this.usuario.correo, [Validators.required]],
       fechaNacimiento: [String(moment(this.usuario.fecha_nac).format("MM/DD/yyyy")), [Validators.required]],
       telefono: [this.usuario.numero_tel, [Validators.required]],
-      password: [this.usuario.password, [Validators.required]],
+      password: [this.usuario.password, [Validators.required, Validators.pattern(this.passwordRegex)]],
     });
     this.loading = false;
   }
