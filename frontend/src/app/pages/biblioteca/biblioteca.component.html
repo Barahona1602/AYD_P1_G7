@@ -18,8 +18,8 @@
         </ul>
     </div>
     <div class="row">
-        <div class="col-lg-2"></div>
-        <div class="col-lg-8" *ngIf="!loading">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10" *ngIf="!loading">
             <ng-container *ngIf="vistaActiva === 'COMPRAS'">
                 <table class="table mt-3">
                     <thead class="table-dark">
@@ -35,6 +35,9 @@
                             </th>
                             <th>
                                 Valor de Compra
+                            </th>
+                            <th>
+                                Fecha de Adquisición
                             </th>
                         </tr>
                     </thead>
@@ -53,6 +56,9 @@
                             </td>
                             <td>
                                 {{libro.precio_compra | currency: 'Q'}}
+                            </td>
+                            <td>
+                                {{ libro.fecha_venta | date }}
                             </td>
                         </tr>
                     </tbody>
@@ -78,7 +84,10 @@
                                 Valor de Renta
                             </th>
                             <th>
-                                Fecha de Entrega
+                                Fecha de Adquisición
+                            </th>
+                            <th>
+                                Fecha de Devolución
                             </th>
                             <th>
                                 Acción
@@ -103,6 +112,9 @@
                                 {{ libro.precio_renta | currency: 'Q' }}
                             </td>
                             <td>
+                                {{ libro.fecha_renta | date }}
+                            </td>
+                            <td>
                                 {{ libro.fecha_devolucion | date }}
                             </td>
                             <td>
@@ -117,6 +129,6 @@
                 </div>
             </ng-container>
         </div>
-        <div class="col-lg-2"></div>
+        <div class="col-lg-1"></div>
     </div>
 </div>

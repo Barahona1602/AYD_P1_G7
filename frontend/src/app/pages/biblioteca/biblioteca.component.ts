@@ -46,7 +46,7 @@ export class BibliotecaComponent implements OnInit {
   getLibrosComprados(): void {
     this.loading = true;
     this.pagesService.getLibrosCompradosDeUsuario(this.authService.user["id_usuario"]).subscribe(resp => {
-      // console.log(resp);
+      console.log(resp);
       this.librosComprados = resp.ventas;
       this.loading = false;
     }, err => {
